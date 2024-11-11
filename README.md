@@ -39,3 +39,7 @@ npm start
 # dev 
 npm run dev
 ```
+
+
+# 
+- no-stdin with nodedemon in dev ( known issues https://www.npmjs.com/package/inquirer#methods )https://github.com/SBoudrias/Inquirer.js/issues/844#issuecomment-736675867 

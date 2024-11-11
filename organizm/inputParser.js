@@ -42,10 +42,13 @@ this.input.delay = this.input.end - this.input.start;
   checkFirstChar(input) {
     let content = input.content;
     let firstChar = content.charAt(0);
+    let arrayContent = []
     switch (firstChar) {
       case "/":
+        arrayContent = content.split(" ").map((e) => e.trim())
         this.input.type = "command";
-        this.input.value = this.input.content.slice(1);
+        this.input.command = arrayContent.shift().slice(1);
+        this.input.value = arrayContent
         this.input.inputNew = "";
         break;
       case ".":
