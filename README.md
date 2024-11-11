@@ -3,7 +3,14 @@
 - inspired from https://github.com/scenaristeur/agent, demo https://www.youtube.com/watch?v=YT61BcjGfwc
 
 
+# run 
 
+```
+# prod 
+npm start
+# dev 
+npm run dev
+```
 
 
 # adding data
@@ -53,15 +60,17 @@ VITE_SOLID_WEBID="http://localhost:3000/xxxxxxxxxxxx/profile/card#me"
 VITE_SOLID_TOKEN_IDENTIFIER="localhost_xxxxxxxxxxxx"
 VITE_SOLID_TOKEN_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
-
-# run 
-
+# connect to Solid Server
+- add connection
 ```
-# prod 
-npm start
-# dev 
-npm run dev
+# add connection    
+/db http://localhost:3000 Solid
+# get dbs
+/dbs
+# connect to remote
+/db Solid
 ```
+
 
 # Default Data Folder
 - $HOME/.organizm/ 

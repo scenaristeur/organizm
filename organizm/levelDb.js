@@ -20,6 +20,7 @@ export class LevelDb {
 
   async get(data) {
     let value = data.value;
+    console.log("DELETE ? ", data.subcommand);
     console.log("value", value);
     let filter = {};
     value.map(function (f) {
@@ -51,14 +52,50 @@ export class LevelDb {
     });
 
     console.log("filter", filter);
-
-    await this.db.get(filter, function (err, list) {
+    let db = this.db
+  this.db.get(filter, async function (err, list) {
       if (err) {
         console.log(err);
       }
       console.log("get", list);
-      return list;
+   
+
+if (data.subcommand == "delete") {
+
+for (let i = 0; i < list.length; i++) {
+  let triple = list[i];
+  console.log("DELETE", triple);
+  try{
+    
+  db.del(triple, function(err) {
+    if (err) {
+      console.log(err);
+    }
+     console.log("deleted ", triple)
+    // do something after the triple is inserted
+  });
+
+}catch(err){
+  console.log(err)
+}
+
+
+}
+}
+return list
     });
+ 
+  }
+
+  del(triple) {   
+    db.del(triple, function(err) {
+      if (err) {
+        console.log(err);
+      }
+      // console.log("putted")
+      // do something after the triple is inserted
+    });
+
   }
 
   stream(filter, callback) {

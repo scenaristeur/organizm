@@ -43,6 +43,8 @@ let db = new LevelDb({ name: config.DBS_FOLDER + dbName });
 
 let remoteDB = "";
 
+let last_get = []
+
 // db.stream({ predicate: "b" }, (data) => {
 //   console.log("from stream", data);
 // })
@@ -152,15 +154,21 @@ const main = async () => {
               switch (analyzed.command) {
                 case "get":
                 case "g":
-                  console.log("get");
-                  await db.get(analyzed);
+                  // console.log("get");
+                  // how to get the await/aync ?
+                 last_get = await db.get(analyzed);
+                //  console.log("last get", last_get)
+                  break;
+                  case "delete":
+                    analyzed.subcommand = "delete";
+                    last_get = await db.get(analyzed);
                   break;
                 case "db":
                   console.log("db", analyzed);
                   if (remoteDBS.hasOwnProperty(analyzed.value[0])) {
                     remoteDB = remoteDBS[analyzed.value[0]];
                     console.log("Connect to remote ", remoteDB);
-                  } else if (analyzed.value[0].startsWith("http")) {
+                  } else if (analyzed.value[0] && analyzed.value[0].startsWith("http")) {
                     remoteDBS[analyzed.value[1]] = {
                       name: analyzed.value[1],
                       url: analyzed.value[0],
