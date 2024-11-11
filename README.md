@@ -21,7 +21,7 @@ see demo https://www.youtube.com/watch?v=YT61BcjGfwc
 
 # /get filters
 according to https://github.com/levelgraph/levelgraph?tab=readme-ov-file#get-and-put
-s = subject, p = predicate, o = object, l = limit, o = offset, r = reverse
+s = subject, p = predicate, o = object, l = limit, of = offset, r = reverse
 
 - /get s:dav p:eat => get all data where subject is 'dav' and predicate is 'eat'
 

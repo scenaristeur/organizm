@@ -2,17 +2,14 @@
 
 // import inquirer from 'inquirer'
 import "dotenv/config";
-import { input } from "@inquirer/prompts";
+// import { input } from "@inquirer/prompts";
 import inquirer from "inquirer";
-import inquirerCommandPrompt from 'inquirer-command-prompt';
+import inquirerCommandPrompt from "inquirer-command-prompt";
 import { InputParser } from "./organizm/index.js";
 import { LevelDb } from "./organizm/levelDb.js";
 import { readdir, writeFile, readFile } from "fs/promises";
 
-inquirer.registerPrompt(
-  'command',
-  inquirerCommandPrompt
-)
+inquirer.registerPrompt("command", inquirerCommandPrompt);
 
 let HOME =
   process.env.HOME ||
@@ -28,11 +25,10 @@ let config = {
   SOLID_TOKEN_SECRET: process.env.VITE_SOLID_TOKEN_SECRET,
   DBS_FOLDER: HOME + "/.organizm/dbs/", // MUST END WITH "/"
   DEFAULT_DB_NAME: "/organizm.default.db",
-  REMOTE_DBS_FILE: "remoteDBS.json"
+  REMOTE_DBS_FILE: "remoteDBS.json",
 };
 
 console.log(config);
-
 
 let getRemoteDBS = async () => {
   let remoteDBS = await readFile(config.DBS_FOLDER + config.REMOTE_DBS_FILE);
@@ -42,12 +38,10 @@ let getRemoteDBS = async () => {
 let remoteDBS = await getRemoteDBS();
 console.log(remoteDBS);
 
-
-
 let dbName = config.DEFAULT_DB_NAME;
 let db = new LevelDb({ name: config.DBS_FOLDER + dbName });
 
-// let remoteDBS = {};
+let remoteDB = "";
 
 // db.stream({ predicate: "b" }, (data) => {
 //   console.log("from stream", data);
@@ -71,12 +65,11 @@ process.stdin.on("keypress", (_, key) => {
   if (key.name === "escape") {
     exit();
   }
-  
+
   // else {
   //   console.log(key.name);
   // }
 });
-
 
 console.log("Tape 'exit' pour quitter, TAB pour suggestions");
 
@@ -91,26 +84,26 @@ let inputNew = "";
 const availableCommands = [
   {
     filter: function (str) {
-      return str.replace(/ \[.*$/, '')
-    }
+      return str.replace(/ \[.*$/, "");
+    },
   },
-  '/dbs', 
-  '/db [localdb]',
-   '/db [remotedb] [name]',
-   '/get',
-    '/get s:[subject] p:[predicate] o:[object] l:[limit] o:[offset] r:[reverse]',
-     'foo ba mike',
-      'foo bb buck',
-       'foo bb jick', 
-       'boo', 
-       'fuu', 
-       'quit',
-        'show john [first option]',
-         'show mike [second option]', 
-         "isb -b --aab-long -a optA",
-          "isb -b --aab-long -a optB", 
-          "isb -b --aab-long -a optC"
-]
+  "/dbs",
+  "/db [localdb]",
+  "/db [remotedb] [name]",
+  "/get",
+  "/get s:[subject] p:[predicate] o:[object] l:[limit] of:[offset] r:[reverse]",
+  //  'foo ba mike',
+  //   'foo bb buck',
+  //    'foo bb jick',
+  //    'boo',
+  //    'fuu',
+  //    'quit',
+  //     'show john [first option]',
+  //      'show mike [second option]',
+  //      "isb -b --aab-long -a optA",
+  //       "isb -b --aab-long -a optB",
+  //       "isb -b --aab-long -a optC"
+];
 
 // infinite run https://stackoverflow.com/questions/61417816/how-do-i-invoke-inquirer-js-menu-in-a-loop-using-promises
 const main = async () => {
@@ -118,101 +111,104 @@ const main = async () => {
   while (loop) {
     // await showMenu()
     // await user_input()
-    
 
-    await inquirer.prompt([
-      {
-        type: 'command',
-        name: 'cmd',
-        autoCompletion: availableCommands,
-        message: '>',
-        context: 0,
-        validate: val => {
-          return val
-              ? true
-              : 'Press TAB for suggestions'
+    await inquirer
+      .prompt([
+        {
+          type: "command",
+          name: "cmd",
+          autoCompletion: availableCommands,
+          message: ">",
+          context: 0,
+          validate: (val) => {
+            return val ? true : "Press TAB for suggestions";
+          },
+          short: true,
+
+          signal: controller.signal,
         },
-        short: true,
-        
-     signal: controller.signal 
-      }
-    ])
-    // .then(answers => {
-    //   return Promise.resolve(answers.cmd)
-    // }).catch(err => {
-    //   console.error(err.stack)
-    // })
-    .then(async (answer) => {
-      console.log(answer);
-      answer = answer.cmd
-      if (answer == "exit") {
-        console.log("save & exit");
-        loop = false;
-        process.exit(0);
-      } else {
-        let input = { role: "user", content: answer };
-        let analyzed = ip.analyze(input);
-        inputNew = analyzed.inputNew;
-        console.log("analyzed", analyzed);
+      ])
+      // .then(answers => {
+      //   return Promise.resolve(answers.cmd)
+      // }).catch(err => {
+      //   console.error(err.stack)
+      // })
+      .then(async (answer) => {
+        console.log(answer);
+        answer = answer.cmd;
+        if (answer == "exit") {
+          console.log("save & exit");
+          loop = false;
+          process.exit(0);
+        } else {
+          let input = { role: "user", content: answer };
+          let analyzed = ip.analyze(input);
+          inputNew = analyzed.inputNew;
+          console.log("analyzed", analyzed);
 
-        switch (analyzed.type) {
-          case "command":
-            console.log("command");
-            switch (analyzed.command) {
-              case "get":
-              case "g":
-                console.log("get");
-                await db.get(analyzed);
-                break;
-              case "db":
-                console.log("db", analyzed);
-                if (analyzed.value[0].startsWith("http")) {
-                  remoteDBS[analyzed.value[1]] = {
-                    name: analyzed.value[1],
-                    url: analyzed.value[0],
-                  };
-                  await writeFile(
-                    config.DBS_FOLDER + config.REMOTE_DBS_FILE,
-                    JSON.stringify(remoteDBS)
-                  )
-                } else {
-                  dbName =
-                    (analyzed.value.length > 0 && analyzed.value[0]) ||
-                    config.DEFAULT_DB_NAME;
-                  db = new LevelDb({ name: config.DBS_FOLDER + dbName });
-                }
-                break;
-              case "dbls":
-              case "dbs":
-                console.log(
-                  "DB list of" + config.DBS_FOLDER,
-                  "current DB : ",
-                  dbName
-                );
-                const getDirectories = async (source) =>
-                  (await readdir(source, { withFileTypes: true }))
-                    .filter((dirent) => dirent.isDirectory())
-                    .map((dirent) => dirent.name);
-                console.log(await getDirectories(config.DBS_FOLDER));
-                console.log("remoteDBS", remoteDBS);
+          switch (analyzed.type) {
+            case "command":
+              console.log("command");
+              switch (analyzed.command) {
+                case "get":
+                case "g":
+                  console.log("get");
+                  await db.get(analyzed);
+                  break;
+                case "db":
+                  console.log("db", analyzed);
+                  if (remoteDBS.hasOwnProperty(analyzed.value[0])) {
+                    remoteDB = remoteDBS[analyzed.value[0]];
+                    console.log("Connect to remote ", remoteDB);
+                  } else if (analyzed.value[0].startsWith("http")) {
+                    remoteDBS[analyzed.value[1]] = {
+                      name: analyzed.value[1],
+                      url: analyzed.value[0],
+                    };
+                    await writeFile(
+                      config.DBS_FOLDER + config.REMOTE_DBS_FILE,
+                      JSON.stringify(remoteDBS)
+                    );
+                  } else {
+                    dbName =
+                      (analyzed.value.length > 0 && analyzed.value[0]) ||
+                      config.DEFAULT_DB_NAME;
+                    db = new LevelDb({ name: config.DBS_FOLDER + dbName });
+                  }
+                  break;
+                case "dbls":
+                case "dbs":
 
-                break;
-            }
-            break;
-          case "triplet":
-            console.log("triplet");
-            await db.put(analyzed.value);
-            break;
-          default:
-            console.log("default");
-            break;
+                  const getDirectories = async (source) =>
+                    (await readdir(source, { withFileTypes: true }))
+                      .filter((dirent) => dirent.isDirectory())
+                      .map((dirent) => dirent.name);
+              
+                  console.log(
+                    "\nDB list of" + config.DBS_FOLDER ," : ", await getDirectories(config.DBS_FOLDER   ));
+                     console.log("->current DB : ",
+                    dbName
+                  );
+                  console.log("\nremoteDBS :", remoteDBS);
+                  console.log("->remote DB : ", remoteDB)
+
+                  break;
+              }
+              break;
+            case "triplet":
+              console.log("triplet");
+              await db.put(analyzed.value);
+              break;
+            default:
+              console.log("default");
+              break;
+          }
+          // console.log(ip.history)
         }
-        // console.log(ip.history)
-      
-      }
-    }).catch(err => {
-      console.error(err.stack)
-    })
+      })
+      .catch((err) => {
+        console.error(err.stack);
+      });
     console.log("continue");
   }
 };

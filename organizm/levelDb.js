@@ -37,7 +37,7 @@ export class LevelDb {
           case "l":
           filter.limit= Number(v)
           break; 
-        case "o":
+        case "of":
           filter.offset= Number(v)
           break; 
         case "r":
