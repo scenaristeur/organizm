@@ -1,6 +1,6 @@
 # Getting started
 - first thing to start is good musik https://www.radiofrance.fr/fip/radio-groove
-
+- inspired from https://github.com/scenaristeur/agent, demo https://www.youtube.com/watch?v=YT61BcjGfwc
 
 
 
@@ -20,7 +20,7 @@ then
 ![alt text](./doc/images/pod_creation.png)
 
 
-# env
+# .env
 - cp .env_example to .env and replace this values with yours
 
 ```
@@ -29,4 +29,13 @@ VITE_SOLID_POD="http://localhost:3000/xxxxxxxxxx/"
 VITE_SOLID_WEBID="http://localhost:3000/xxxxxxxxxxxx/profile/card#me"
 VITE_SOLID_TOKEN_IDENTIFIER="localhost_xxxxxxxxxxxx"
 VITE_SOLID_TOKEN_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxx"
+```
+
+# run 
+
+```
+# prod 
+npm start
+# dev 
+npm run dev
 ```
