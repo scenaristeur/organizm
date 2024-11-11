@@ -5,11 +5,13 @@ import "dotenv/config";
 import { input } from "@inquirer/prompts";
 import { InputParser } from "./organizm/index.js";
 import { LevelDb } from "./organizm/levelDb.js";
+import { readdir } from 'fs/promises'
 
-let db = new LevelDb();
-db.stream({ predicate: "b" }, (data) => {
-  console.log("from stream", data);
-})
+let HOME =
+  process.env.HOME ||
+  process.env.HOMEPATH ||
+  process.env.USERPROFILE ||
+  process.env.VITE_DBS_FOLDER;
 
 let config = {
   SOLID_BASE_URL: process.env.VITE_SOLID_BASE_URL,
@@ -17,12 +19,21 @@ let config = {
   SOLID_WEBID: process.env.VITE_SOLID_WEBID,
   SOLID_TOKEN_IDENTIFIER: process.env.VITE_SOLID_TOKEN_IDENTIFIER,
   SOLID_TOKEN_SECRET: process.env.VITE_SOLID_TOKEN_SECRET,
+  DBS_FOLDER: HOME + "/.organizm/dbs/", // MUST END WITH "/"
+  DEFAULT_DB_NAME: "/organizm.default.db",
 };
 
-// console.log(config)
+console.log(config);
+
+let dbName = config.DEFAULT_DB_NAME;
+let db = new LevelDb({ name: config.DBS_FOLDER + dbName });
+
+// db.stream({ predicate: "b" }, (data) => {
+//   console.log("from stream", data);
+// })
+
 let ip = new InputParser();
 
-console.log(ip);
 
 // Clear the screen
 process.stdout.write("\u001b[2J\u001b[0;0H");
@@ -65,15 +76,43 @@ const main = async () => {
         process.exit(0);
       } else {
         let input = { role: "user", content: answer };
-
         let analyzed = ip.analyze(input);
         inputNew = analyzed.inputNew;
         console.log("analyzed", analyzed);
-        if (analyzed.type == "triplet") {
-          console.log("triplet");
-await db.put(analyzed.value)
-        }else if (analyzed.type == "command" && (analyzed.command == "get" || analyzed.command == "g")) {
-          await db.get(analyzed)
+
+        switch (analyzed.type) {
+          case "command":
+            console.log("command");
+            switch (analyzed.command) {
+              case "get":
+              case "g":
+                console.log("get");
+                await db.get(analyzed);
+                break;
+              case "db":
+                console.log("db", analyzed);
+                dbName = analyzed.value.length > 0 &&analyzed.value[0] || config.DEFAULT_DB_NAME;
+                db = new LevelDb({ name: config.DBS_FOLDER + dbName });
+                break;
+              case "dbls":
+              case "dbs":
+                console.log("DB list of" +config.DBS_FOLDER , "current DB : ", dbName);
+                const getDirectories = async source =>
+                  (await readdir(source, { withFileTypes: true }))
+                    .filter(dirent => dirent.isDirectory())
+                    .map(dirent => dirent.name)
+                console.log(await getDirectories(config.DBS_FOLDER));
+
+                break;
+            }
+            break;
+          case "triplet":
+            console.log("triplet");
+            await db.put(analyzed.value);
+            break;
+          default:
+            console.log("default");
+            break;
         }
         // console.log(ip.history)
         console.log("continue");

@@ -6,7 +6,7 @@ import levelgraph from "levelgraph";
 export class LevelDb {
   constructor(options = { name: "yourdb" }) {
     this.db = levelgraph(new Level(options.name));
-    var triple = { subject: "a", predicate: "b", object: "c" };
+
   }
 
   async put(triple) {

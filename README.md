@@ -4,13 +4,38 @@
 
 
 
+
+
+# adding data
+> data insertions ends with ',' ';' '.' or '-'
+adding data follows the tripet s:p:o format (subject, predicate, object), ending with ',' ';' '.' or '-'
+see demo https://www.youtube.com/watch?v=YT61BcjGfwc
+
+
+# commands
+> commands start with '/'
+- [ X ] /dbls or /dbs: list all databases
+- [ X ] /db [something]: connect to a [something] database, default is /organizm.default.db
+- [ X ] /get or /g : get data, accept filters (see below)
+
+
+# /get filters
+according to https://github.com/levelgraph/levelgraph?tab=readme-ov-file#get-and-put
+s = subject, p = predicate, o = object, l = limit, o = offset, r = reverse
+
+- /get s:dav p:eat => get all data where subject is 'dav' and predicate is 'eat'
+
+
+
+
+
 # Run a Community Solid Server
 - https://communitysolidserver.github.io/CommunitySolidServer/latest/
 ```
 # install
 npm install -g @solid/community-server
 # run
-community-solid-server -c @css:config/file.json -f data/
+community-solid-server -c @css:config/file.json -f ~/.organizm/solid_data/
 ```
 then 
 - open http://localhost:3000 to see if CSS (Community Solid Server) is running 
@@ -39,6 +64,10 @@ npm start
 # dev 
 npm run dev
 ```
+
+# Default Data Folder
+- $HOME/.organizm/ 
+
 
 
 # 
