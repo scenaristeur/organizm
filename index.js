@@ -3,11 +3,13 @@
 // import inquirer from 'inquirer'
 import "dotenv/config";
 // import { input } from "@inquirer/prompts";
+import { readdir, writeFile, readFile } from "fs/promises";
 import inquirer from "inquirer";
 import inquirerCommandPrompt from "inquirer-command-prompt";
-import { InputParser } from "./organizm/index.js";
-import { LevelDb } from "./organizm/levelDb.js";
-import { readdir, writeFile, readFile } from "fs/promises";
+import { InputParser, LevelDb, Solid } from "./organizm/index.js";
+
+
+ 
 
 inquirer.registerPrompt("command", inquirerCommandPrompt);
 
@@ -29,6 +31,14 @@ let config = {
 };
 
 console.log(config);
+
+
+let solid = new Solid({
+  url: config.SOLID_BASE_URL,
+  pod: config.SOLID_POD,
+  webId: config.SOLID_WEBID,
+  tokenIdentifier: config.SOLID_TOKEN_IDENTIFIER,
+  tokenSecret: config.SOLID_TOKEN_SECRET,});
 
 let getRemoteDBS = async () => {
   let remoteDBS = await readFile(config.DBS_FOLDER + config.REMOTE_DBS_FILE);
