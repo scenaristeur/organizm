@@ -6,7 +6,6 @@ import levelgraph from "levelgraph";
 export class LevelDb {
   constructor(options = { name: "yourdb" }) {
     this.db = levelgraph(new Level(options.name));
-
   }
 
   async put(triple) {

@@ -27,8 +27,6 @@ s = subject, p = predicate, o = object, l = limit, o = offset, r = reverse
 
 
 
-
-
 # Run a Community Solid Server
 - https://communitysolidserver.github.io/CommunitySolidServer/latest/
 ```

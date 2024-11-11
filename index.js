@@ -5,7 +5,7 @@ import "dotenv/config";
 import { input } from "@inquirer/prompts";
 import { InputParser } from "./organizm/index.js";
 import { LevelDb } from "./organizm/levelDb.js";
-import { readdir } from 'fs/promises'
+import { readdir, writeFile, readFile } from "fs/promises";
 
 let HOME =
   process.env.HOME ||
@@ -21,19 +21,32 @@ let config = {
   SOLID_TOKEN_SECRET: process.env.VITE_SOLID_TOKEN_SECRET,
   DBS_FOLDER: HOME + "/.organizm/dbs/", // MUST END WITH "/"
   DEFAULT_DB_NAME: "/organizm.default.db",
+  REMOTE_DBS_FILE: "remoteDBS.json"
 };
 
 console.log(config);
 
+
+let getRemoteDBS = async () => {
+  let remoteDBS = await readFile(config.DBS_FOLDER + config.REMOTE_DBS_FILE);
+  remoteDBS = JSON.parse(remoteDBS);
+  return remoteDBS;
+};
+let remoteDBS = await getRemoteDBS();
+console.log(remoteDBS);
+
+
+
 let dbName = config.DEFAULT_DB_NAME;
 let db = new LevelDb({ name: config.DBS_FOLDER + dbName });
+
+// let remoteDBS = {};
 
 // db.stream({ predicate: "b" }, (data) => {
 //   console.log("from stream", data);
 // })
 
 let ip = new InputParser();
-
 
 // Clear the screen
 process.stdout.write("\u001b[2J\u001b[0;0H");
@@ -91,16 +104,33 @@ const main = async () => {
                 break;
               case "db":
                 console.log("db", analyzed);
-                dbName = analyzed.value.length > 0 &&analyzed.value[0] || config.DEFAULT_DB_NAME;
-                db = new LevelDb({ name: config.DBS_FOLDER + dbName });
+                if (analyzed.value[0].startsWith("http")) {
+                  remoteDBS[analyzed.value[1]] = {
+                    name: analyzed.value[1],
+                    url: analyzed.value[0],
+                  };
+                  await writeFile(
+                    config.DBS_FOLDER + config.REMOTE_DBS_FILE,
+                    JSON.stringify(remoteDBS)
+                  )
+                } else {
+                  dbName =
+                    (analyzed.value.length > 0 && analyzed.value[0]) ||
+                    config.DEFAULT_DB_NAME;
+                  db = new LevelDb({ name: config.DBS_FOLDER + dbName });
+                }
                 break;
               case "dbls":
               case "dbs":
-                console.log("DB list of" +config.DBS_FOLDER , "current DB : ", dbName);
-                const getDirectories = async source =>
+                console.log(
+                  "DB list of" + config.DBS_FOLDER,
+                  "current DB : ",
+                  dbName
+                );
+                const getDirectories = async (source) =>
                   (await readdir(source, { withFileTypes: true }))
-                    .filter(dirent => dirent.isDirectory())
-                    .map(dirent => dirent.name)
+                    .filter((dirent) => dirent.isDirectory())
+                    .map((dirent) => dirent.name);
                 console.log(await getDirectories(config.DBS_FOLDER));
 
                 break;
