@@ -50,6 +50,17 @@ then
 ![alt text](./doc/images/pod_creation.png)
 
 
+# Run CSS with penny recipe
+```
+git clone https://github.com/CommunitySolidServer/Recipes css_recipes
+cd css_recipes/
+cd penny/
+npm install
+npx community-solid-server -c config-penny.json -f ~/Documents/
+```
+
+
+
 # .env
 - cp .env_example to .env and replace this values with yours
 

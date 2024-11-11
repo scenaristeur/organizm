@@ -223,6 +223,17 @@ const main = async () => {
                   const ls = await solid.ls()
                   console.log(ls)
                   break
+case 'put' :
+                  console.log("Solid put")
+                 let saved =  await solid.createThing(analyzed.value)
+                  break
+
+
+
+
+
+
+
                 default:
                   console.log("default");
                   break;
