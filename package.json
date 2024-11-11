@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@inrupt/solid-client-authn-node": "^2.2.7",
     "dotenv": "^16.4.5",
     "inquirer": "^12.0.1",
     "inquirer-command-prompt": "^0.1.0",

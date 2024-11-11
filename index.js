@@ -34,11 +34,12 @@ console.log(config);
 
 
 let solid = new Solid({
-  url: config.SOLID_BASE_URL,
+  SOLID_BASE_URL : config.SOLID_BASE_URL,
+  clientApplicationName: "organizm",
   pod: config.SOLID_POD,
   webId: config.SOLID_WEBID,
-  tokenIdentifier: config.SOLID_TOKEN_IDENTIFIER,
-  tokenSecret: config.SOLID_TOKEN_SECRET,});
+  token_identifier: config.SOLID_TOKEN_IDENTIFIER,
+  token_secret: config.SOLID_TOKEN_SECRET,});
 
 let getRemoteDBS = async () => {
   let remoteDBS = await readFile(config.DBS_FOLDER + config.REMOTE_DBS_FILE);
@@ -162,6 +163,7 @@ const main = async () => {
             case "command":
               console.log("command");
               switch (analyzed.command) {
+                // LEVELGRAPH
                 case "get":
                 case "g":
                   // console.log("get");
@@ -210,6 +212,19 @@ const main = async () => {
                   console.log("\nremoteDBS :", remoteDBS);
                   console.log("->remote DB : ", remoteDB)
 
+                  break;
+                  //SOLID
+                  case 't' : 
+                  console.log("Solid test")
+                  await solid.test()
+                  break;
+                  case 'ls' : 
+                  console.log("Solid client")
+                  const ls = await solid.ls()
+                  console.log(ls)
+                  break
+                default:
+                  console.log("default");
                   break;
               }
               break;
