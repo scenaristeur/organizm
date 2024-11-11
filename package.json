@@ -14,6 +14,7 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "inquirer": "^12.0.1",
+    "inquirer-command-prompt": "^0.1.0",
     "level": "^8.0.1",
     "levelgraph": "^4.0.0"
   }

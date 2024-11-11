@@ -35,10 +35,10 @@ export class LevelDb {
           filter.object= v 
           break;
           case "l":
-          filter.limit= v
+          filter.limit= Number(v)
           break; 
         case "o":
-          filter.offset= v
+          filter.offset= Number(v)
           break; 
         case "r":
           filter.reverse= v

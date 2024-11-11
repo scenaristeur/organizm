@@ -3,9 +3,16 @@
 // import inquirer from 'inquirer'
 import "dotenv/config";
 import { input } from "@inquirer/prompts";
+import inquirer from "inquirer";
+import inquirerCommandPrompt from 'inquirer-command-prompt';
 import { InputParser } from "./organizm/index.js";
 import { LevelDb } from "./organizm/levelDb.js";
 import { readdir, writeFile, readFile } from "fs/promises";
+
+inquirer.registerPrompt(
+  'command',
+  inquirerCommandPrompt
+)
 
 let HOME =
   process.env.HOME ||
@@ -64,25 +71,80 @@ process.stdin.on("keypress", (_, key) => {
   if (key.name === "escape") {
     exit();
   }
+  
+  // else {
+  //   console.log(key.name);
+  // }
 });
 
-console.log("Tape exit pour quitter");
+
+console.log("Tape 'exit' pour quitter, TAB pour suggestions");
 
 let inputNew = "";
-const user_input = () => {
-  return input(
-    { message: "User : " /*, default: inputNew*/ },
-    { signal: controller.signal }
-  );
-};
+// const user_input = () => {
+//   return input(
+//     { message: "User : " /*, default: inputNew*/ },
+//     { signal: controller.signal }
+//   );
+// };
+
+const availableCommands = [
+  {
+    filter: function (str) {
+      return str.replace(/ \[.*$/, '')
+    }
+  },
+  '/dbs', 
+  '/db [localdb]',
+   '/db [remotedb] [name]',
+   '/get',
+    '/get s:[subject] p:[predicate] o:[object] l:[limit] o:[offset] r:[reverse]',
+     'foo ba mike',
+      'foo bb buck',
+       'foo bb jick', 
+       'boo', 
+       'fuu', 
+       'quit',
+        'show john [first option]',
+         'show mike [second option]', 
+         "isb -b --aab-long -a optA",
+          "isb -b --aab-long -a optB", 
+          "isb -b --aab-long -a optC"
+]
 
 // infinite run https://stackoverflow.com/questions/61417816/how-do-i-invoke-inquirer-js-menu-in-a-loop-using-promises
 const main = async () => {
   let loop = true;
   while (loop) {
     // await showMenu()
-    await user_input().then(async (answer) => {
+    // await user_input()
+    
+
+    await inquirer.prompt([
+      {
+        type: 'command',
+        name: 'cmd',
+        autoCompletion: availableCommands,
+        message: '>',
+        context: 0,
+        validate: val => {
+          return val
+              ? true
+              : 'Press TAB for suggestions'
+        },
+        short: true,
+        
+     signal: controller.signal 
+      }
+    ])
+    // .then(answers => {
+    //   return Promise.resolve(answers.cmd)
+    // }).catch(err => {
+    //   console.error(err.stack)
+    // })
+    .then(async (answer) => {
       console.log(answer);
+      answer = answer.cmd
       if (answer == "exit") {
         console.log("save & exit");
         loop = false;
@@ -132,6 +194,7 @@ const main = async () => {
                     .filter((dirent) => dirent.isDirectory())
                     .map((dirent) => dirent.name);
                 console.log(await getDirectories(config.DBS_FOLDER));
+                console.log("remoteDBS", remoteDBS);
 
                 break;
             }
@@ -145,9 +208,12 @@ const main = async () => {
             break;
         }
         // console.log(ip.history)
-        console.log("continue");
+      
       }
-    });
+    }).catch(err => {
+      console.error(err.stack)
+    })
+    console.log("continue");
   }
 };
 
