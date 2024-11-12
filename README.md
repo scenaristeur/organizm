@@ -56,8 +56,14 @@ git clone https://github.com/CommunitySolidServer/Recipes css_recipes
 cd css_recipes/
 cd penny/
 npm install
-npx community-solid-server -c config-penny.json -f ~/Documents/
+community-solid-server -c config-penny.json -f ~/.organizm/solid_data
+
 ```
+
+# voir aussi comunica
+- bug https://github.com/inrupt/solid-client-authn-js/issues/3773
+- https://github.com/comunica/comunica-feature-solid
+
 
 
 

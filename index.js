@@ -6,10 +6,15 @@ import "dotenv/config";
 import { readdir, writeFile, readFile } from "fs/promises";
 import inquirer from "inquirer";
 import inquirerCommandPrompt from "inquirer-command-prompt";
-import { InputParser, LevelDb, Solid } from "./organizm/index.js";
+import {
+  InputParser,
+  LevelDb,
+   Solid , // bug https://github.com/inrupt/solid-client-authn-js/issues/3773
+  // SolidInrupt,
+  //  SolidLdKit
+} from "./organizm/index.js";
 
-
- 
+// let Solid = SolidInrupt;
 
 inquirer.registerPrompt("command", inquirerCommandPrompt);
 
@@ -32,14 +37,14 @@ let config = {
 
 console.log(config);
 
-
 let solid = new Solid({
-  SOLID_BASE_URL : config.SOLID_BASE_URL,
+  SOLID_BASE_URL: config.SOLID_BASE_URL,
   clientApplicationName: "organizm",
   pod: config.SOLID_POD,
   webId: config.SOLID_WEBID,
   token_identifier: config.SOLID_TOKEN_IDENTIFIER,
-  token_secret: config.SOLID_TOKEN_SECRET,});
+  token_secret: config.SOLID_TOKEN_SECRET,
+});
 
 let getRemoteDBS = async () => {
   let remoteDBS = await readFile(config.DBS_FOLDER + config.REMOTE_DBS_FILE);
@@ -54,7 +59,7 @@ let db = new LevelDb({ name: config.DBS_FOLDER + dbName });
 
 let remoteDB = "";
 
-let last_get = []
+let last_get = [];
 
 // db.stream({ predicate: "b" }, (data) => {
 //   console.log("from stream", data);
@@ -168,19 +173,34 @@ const main = async () => {
                 case "g":
                   // console.log("get");
                   // how to get the await/aync ?
-                 last_get = await db.get(analyzed);
-                //  console.log("last get", last_get)
+                  last_get = await db.get(analyzed);
+                  //  console.log("last get", last_get)
                   break;
-                  case "delete":
-                    analyzed.subcommand = "delete";
-                    last_get = await db.get(analyzed);
+                case "delete":
+                  analyzed.subcommand = "delete";
+                  last_get = await db.get(analyzed);
                   break;
                 case "db":
                   console.log("db", analyzed);
                   if (remoteDBS.hasOwnProperty(analyzed.value[0])) {
-                    remoteDB = remoteDBS[analyzed.value[0]];
-                    console.log("Connect to remote ", remoteDB);
-                  } else if (analyzed.value[0] && analyzed.value[0].startsWith("http")) {
+                    try {
+                      remoteDB = remoteDBS[analyzed.value[0]];
+                      console.log("Connect to remote ", remoteDB);
+                      solid = new Solid({
+                        SOLID_BASE_URL: config.SOLID_BASE_URL,
+                        clientApplicationName: "organizm",
+                        pod: config.SOLID_POD,
+                        webId: config.SOLID_WEBID,
+                        token_identifier: config.SOLID_TOKEN_IDENTIFIER,
+                        token_secret: config.SOLID_TOKEN_SECRET,
+                      });
+                    } catch (error) {
+                      console.log("error", error);
+                    }
+                  } else if (
+                    analyzed.value[0] &&
+                    analyzed.value[0].startsWith("http")
+                  ) {
                     remoteDBS[analyzed.value[1]] = {
                       name: analyzed.value[1],
                       url: analyzed.value[0],
@@ -198,41 +218,36 @@ const main = async () => {
                   break;
                 case "dbls":
                 case "dbs":
-
                   const getDirectories = async (source) =>
                     (await readdir(source, { withFileTypes: true }))
                       .filter((dirent) => dirent.isDirectory())
                       .map((dirent) => dirent.name);
-              
+
                   console.log(
-                    "\nDB list of" + config.DBS_FOLDER ," : ", await getDirectories(config.DBS_FOLDER   ));
-                     console.log("->current DB : ",
-                    dbName
+                    "\nDB list of" + config.DBS_FOLDER,
+                    " : ",
+                    await getDirectories(config.DBS_FOLDER)
                   );
+                  console.log("->current DB : ", dbName);
                   console.log("\nremoteDBS :", remoteDBS);
-                  console.log("->remote DB : ", remoteDB)
+                  console.log("->remote DB : ", remoteDB);
 
                   break;
-                  //SOLID
-                  case 't' : 
-                  console.log("Solid test")
-                  await solid.test()
+                //SOLID
+                case "t":
+                  console.log("Solid test");
+                  await solid.test();
                   break;
-                  case 'ls' : 
-                  console.log("Solid client")
-                  const ls = await solid.ls()
+                case "ls":
+                  console.log("Solid client");
+                  const ls = await solid.ls();
                   console.log(ls)
-                  break
-case 'put' :
-                  console.log("Solid put")
-                 let saved =  await solid.createThing(analyzed.value)
-                  break
-
-
-
-
-
-
+                  // console.log(JSON.stringify(ls, null, 2));
+                  break;
+                case "put":
+                  console.log("Solid put");
+                  let saved = await solid.createThing(analyzed.value);
+                  break;
 
                 default:
                   console.log("default");
