@@ -25,6 +25,7 @@ let HOME =
   process.env.VITE_DBS_FOLDER;
 
 let config = {
+  USE_SOLID: process.env.USE_SOLID, 
   SOLID_BASE_URL: process.env.VITE_SOLID_BASE_URL,
   SOLID_POD: process.env.VITE_SOLID_POD,
   SOLID_WEBID: process.env.VITE_SOLID_WEBID,
@@ -37,19 +38,28 @@ let config = {
 
 console.log(config);
 
-let solid = new Solid({
-  SOLID_BASE_URL: config.SOLID_BASE_URL,
-  clientApplicationName: "organizm",
-  pod: config.SOLID_POD,
-  webId: config.SOLID_WEBID,
-  token_identifier: config.SOLID_TOKEN_IDENTIFIER,
-  token_secret: config.SOLID_TOKEN_SECRET,
-});
+let solid = null
+if (config.USE_SOLID && config.SOLID_BASE_URL != undefined){
+  new Solid({
+    SOLID_BASE_URL: config.SOLID_BASE_URL,
+    clientApplicationName: "organizm",
+    pod: config.SOLID_POD,
+    webId: config.SOLID_WEBID,
+    token_identifier: config.SOLID_TOKEN_IDENTIFIER,
+    token_secret: config.SOLID_TOKEN_SECRET,
+  });
+}
+
 
 let getRemoteDBS = async () => {
-  let remoteDBS = await readFile(config.DBS_FOLDER + config.REMOTE_DBS_FILE);
-  remoteDBS = JSON.parse(remoteDBS);
-  return remoteDBS;
+  try{
+    let remoteDBS = await readFile(config.DBS_FOLDER + config.REMOTE_DBS_FILE);
+    remoteDBS = JSON.parse(remoteDBS);
+    return remoteDBS;
+  }catch(_){
+console.log("can not open remoteDBS.json")
+  }
+
 };
 let remoteDBS = await getRemoteDBS();
 console.log(remoteDBS);

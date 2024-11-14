@@ -20,6 +20,7 @@
     "inquirer-command-prompt": "^0.1.0",
     "ldkit": "^2.0.0",
     "level": "^8.0.1",
-    "levelgraph": "^4.0.0"
+    "levelgraph": "^4.0.0",
+    "nodemon": "^3.1.7"
   }
 }

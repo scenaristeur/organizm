@@ -1,22 +1,55 @@
 # Getting started
-- first thing to start is good musik https://www.radiofrance.fr/fip/radio-groove
-- inspired from https://github.com/scenaristeur/agent, demo https://www.youtube.com/watch?v=YT61BcjGfwc
+- first thing to start is good musik [Fip-Groove](https://www.radiofrance.fr/fip/radio-groove)
+- inspired from [scenaristeur/agent](https://github.com/scenaristeur/agent), [demo](https://www.youtube.com/watch?v=YT61BcjGfwc)
 
 
 # run 
 
 ```
+git clone https://github.com/scenaristeur/organizm.git
+cd organizm
+npm install
+
 # prod 
 npm start
 # dev 
 npm run dev
 ```
+# usage
+
+By default, data is stored and persisted in  ~/.organizm/dbs/organizm.default.db using [LevelGraph](https://github.com/levelgraph/levelgraph) 
+
+## adding data
+
+- (EN) To add a triple, type three words followed by a comma (,)
+- (FR) pour ajouter un triplet tapez trois mots suivis d'une virgule (,)
 
 
-# adding data
 > data insertions ends with ',' ';' '.' or '-'
-adding data follows the tripet s:p:o format (subject, predicate, object), ending with ',' ';' '.' or '-'
-see demo https://www.youtube.com/watch?v=YT61BcjGfwc
+
+>adding data follows the tripet s:p:o format (subject, predicate, object), ending with ',' ';' '.' or '-'
+
+>see demo of another similar project that uses this syntax https://www.youtube.com/watch?v=YT61BcjGfwc
+
+
+
+![alt text](./doc/images/adding.png)
+
+## getting and filtering data
+- (EN) /g or /get with filter like s:dav (for 'subject==dav'), but it could also be 'p:knows', or 'o:lina'
+- (FR) /g ou /get avec un filtre comme s:dav (pour 'sujet==dav'), mais ça pourrait également être 'p:knows', ou 'o:lina'
+
+![alt text](./doc/images/getting.png)
+
+
+
+
+
+
+
+
+
+
 
 
 # commands
