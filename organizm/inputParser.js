@@ -63,7 +63,24 @@ this.input.delay = this.input.end - this.input.start;
           "history commande see https://github.com/scenaristeur/agent/blob/db71559451632aca27abbdcf876c175905d49b2b/src/neurone-factory/command.js#L29C1-L29C23"
         );
         break;
-
+      case "!":
+        console.log("remove triple")
+        content = content.slice(1)
+        arrayContent = content.split(" ").map((e) => e.trim())
+        let value = ["s:"+arrayContent[0]+", p:"+arrayContent[1]+", o:"+arrayContent[2]]
+        this.input.type = "command";
+        this.input.command = "delete";
+        this.input.value = value
+        this.input.inputNew = "";
+      break;
+      case "%":
+        console.log("replace /update")
+        arrayContent = content.split(" ").map((e) => e.trim())
+        this.input.type = "command";
+        this.input.command = "update";
+        this.input.value = arrayContent
+        this.input.inputNew = "";
+      break;
       case "?":
         //   case "help":
         //   case "h":

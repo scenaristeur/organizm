@@ -42,21 +42,26 @@ By default, data is stored and persisted in  ~/.organizm/dbs/organizm.default.db
 ![alt text](./doc/images/getting.png)
 
 
-
-
-
-
-
-
-
-
-
-
 # commands
 > commands start with '/'
 - [ X ] /dbls or /dbs: list all databases
 - [ X ] /db [something]: connect to a [something] database, default is /organizm.default.db
 - [ X ] /get or /g : get data, accept filters (see below)
+
+> remove a triple with !
+- [ ] !dav a man
+
+>  replace a triple with %
+- % dav a man -> dav a boss,
+
+> gestion des alias
+- solid aliasof http://localhost:3000,
+
+> gestions des
+- chains de langchain https://js.langchain.com/docs/tutorials/sql_qa/
+- tools de langchain, memgpt, crewai... composio https://docs.letta.com/agents/tools
+- agents
+
 
 
 # /get filters

@@ -119,6 +119,7 @@ const availableCommands = [
   "/db [localdb]",
   "/db [remotedb] [name]",
   "/get",
+  "/g",
   "/get s:[subject] p:[predicate] o:[object] l:[limit] of:[offset] r:[reverse]",
   //  'foo ba mike',
   //   'foo bb buck',
