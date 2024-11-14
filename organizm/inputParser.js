@@ -65,17 +65,28 @@ this.input.delay = this.input.end - this.input.start;
         break;
       case "!":
         console.log("remove triple")
-        content = content.slice(1)
-        arrayContent = content.split(" ").map((e) => e.trim())
-        let value = ["s:"+arrayContent[0]+", p:"+arrayContent[1]+", o:"+arrayContent[2]]
+        let value = content.slice(1)
+        let words = value.split(' ').map((e) => e.trim())
         this.input.type = "command";
         this.input.command = "delete";
-        this.input.value = value
+        this.input.value = ["s:"+words[0]+", p:"+words[1]+", o:"+words[2]]
         this.input.inputNew = "";
+        // arrayContent = content.split(" ").map((e) => e.trim())
+        //let value = content 
+        // [ 's:dav', 'p:a', 'o:boss' ]
+//        let value = []
+        // s:"+arrayContent[0]+", p:"+arrayContent[1]+", o:"+arrayContent[2]]
+        // this.input.type = "command";
+        // this.input.command = "delete";
+        // this.input.subcommand = "delete"
+        // this.input.value = value
+        // this.input.inputNew = "";
       break;
       case "%":
         console.log("replace /update")
         arrayContent = content.split(" ").map((e) => e.trim())
+
+
         this.input.type = "command";
         this.input.command = "update";
         this.input.value = arrayContent

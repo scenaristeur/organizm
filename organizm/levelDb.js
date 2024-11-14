@@ -60,20 +60,20 @@ export class LevelDb {
       console.log("get", list);
    
 
-if (data.subcommand == "delete") {
+if (data.subcommand == "delete" && Object.keys(filter).length >0) {// filter not empty
 
 for (let i = 0; i < list.length; i++) {
   let triple = list[i];
   console.log("DELETE", triple);
   try{
     
-  db.del(triple, function(err) {
-    if (err) {
-      console.log(err);
-    }
+  // db.del(triple, function(err) {
+  //   if (err) {
+  //     console.log(err);
+  //   }
      console.log("deleted ", triple)
     // do something after the triple is inserted
-  });
+  //});
 
 }catch(err){
   console.log(err)
