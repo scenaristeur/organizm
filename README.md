@@ -132,5 +132,11 @@ VITE_SOLID_TOKEN_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxx"
 
 
 
+# typescript ? interface or type alias ? 
+- https://blog.logrocket.com/types-vs-interfaces-typescript/
+
+# web version
+- ionic-vue
+
 # 
 - no-stdin with nodedemon in dev ( known issues https://www.npmjs.com/package/inquirer#methods )https://github.com/SBoudrias/Inquirer.js/issues/844#issuecomment-736675867 
