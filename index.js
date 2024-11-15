@@ -12,6 +12,7 @@ import {
    Solid , // bug https://github.com/inrupt/solid-client-authn-js/issues/3773
   // SolidInrupt,
   //  SolidLdKit
+  TypesManager
 } from "./organizm/index.js";
 
 // let Solid = SolidInrupt;
@@ -37,6 +38,9 @@ let config = {
 };
 
 console.log(config);
+
+let tm = new TypesManager({update: "auto"});
+
 
 let solid = null
 if (config.USE_SOLID && config.SOLID_BASE_URL != undefined){
@@ -259,7 +263,14 @@ const main = async () => {
                   console.log("Solid put");
                   let saved = await solid.createThing(analyzed.value);
                   break;
-
+// TYPES MANAGER
+case "tmls":
+tm.ls()
+                  break;
+                  case "n":
+tm.new(analyzed.value)
+                  break;
+                  //
                 default:
                   console.log("default");
                   break;
