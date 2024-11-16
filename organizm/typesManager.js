@@ -1,47 +1,49 @@
-import { readdir, readFile/*, writeFile, readFile*/ } from "fs/promises";
+import { readdir, readFile /*, writeFile, readFile*/ } from "fs/promises";
 
 const doc = `\n###TYPES MANAGER###
 -/tmls : list types
 -/n [type]: create a new object of type [type]
 example /n Personne
-\n`
-
+\n`;
 
 const OrganType = {
   id: "string",
   name: "string",
   inputs: "array",
   outputs: "array",
-  type: "string"
-}
+  type: "string",
+};
 const PersonneType = {
   name: "string",
   type: "string",
-  birthDate: "Date"
-}
+  birthDate: "Date",
+};
+
+
+
+
+
+
 
 
 const types = {
   Organ: OrganType,
-  Personne: PersonneType
-}
-
+  Personne: PersonneType,
+};
 
 export class TypesManager {
-  constructor () {
-console.log(doc)
-this.types = types
-
-
+  constructor() {
+    console.log(doc);
+    this.types = types;
   }
 
-  ls (){
-    console.log(Object.keys(this.types))
+  ls() {
+    console.log(Object.keys(this.types));
     //return Object.keys(this.types)
   }
-  new(params){
-console.log(params)
-console.log(this.types[params])
+  new(params) {
+    console.log(params);
+    console.log(this.types[params]);
   }
   // constructor(
   //   options = {
@@ -64,14 +66,14 @@ console.log(this.types[params])
   // async getLocalClasses() {
   //   this.classes = await readdir("./classes/", { withFileTypes: true })
   //   return  await this.classes.map(async (dirent) => {
-  //   console.log("import", dirent.name)  
+  //   console.log("import", dirent.name)
   //   // return await readFile("./classes/" + dirent.name)
   //   return readFile("./classes/" + dirent.name, (err, data) => {
   //     if (err) throw err;
   //     console.log(data);
   //     return data
-  //   }); 
-      
+  //   });
+
   //     // dirent.name
   //   })
   //     // .filter((dirent) => dirent.isDirectory())

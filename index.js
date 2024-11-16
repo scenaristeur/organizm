@@ -9,10 +9,10 @@ import inquirerCommandPrompt from "inquirer-command-prompt";
 import {
   InputParser,
   LevelDb,
-   Solid , // bug https://github.com/inrupt/solid-client-authn-js/issues/3773
+  Solid, // bug https://github.com/inrupt/solid-client-authn-js/issues/3773
   // SolidInrupt,
   //  SolidLdKit
-  TypesManager
+  TypesManager,
 } from "./organizm/index.js";
 
 // let Solid = SolidInrupt;
@@ -26,7 +26,7 @@ let HOME =
   process.env.VITE_DBS_FOLDER;
 
 let config = {
-  USE_SOLID: process.env.USE_SOLID, 
+  USE_SOLID: process.env.USE_SOLID,
   SOLID_BASE_URL: process.env.VITE_SOLID_BASE_URL,
   SOLID_POD: process.env.VITE_SOLID_POD,
   SOLID_WEBID: process.env.VITE_SOLID_WEBID,
@@ -39,11 +39,10 @@ let config = {
 
 console.log(config);
 
-let tm = new TypesManager({update: "auto"});
+let tm = new TypesManager({ update: "auto" });
 
-
-let solid = null
-if (config.USE_SOLID && config.SOLID_BASE_URL != undefined){
+let solid = null;
+if (config.USE_SOLID && config.SOLID_BASE_URL != undefined) {
   new Solid({
     SOLID_BASE_URL: config.SOLID_BASE_URL,
     clientApplicationName: "organizm",
@@ -54,16 +53,14 @@ if (config.USE_SOLID && config.SOLID_BASE_URL != undefined){
   });
 }
 
-
 let getRemoteDBS = async () => {
-  try{
+  try {
     let remoteDBS = await readFile(config.DBS_FOLDER + config.REMOTE_DBS_FILE);
     remoteDBS = JSON.parse(remoteDBS);
     return remoteDBS;
-  }catch(_){
-console.log("can not open remoteDBS.json")
+  } catch (_) {
+    console.log("can not open remoteDBS.json");
   }
-
 };
 let remoteDBS = await getRemoteDBS();
 console.log(remoteDBS);
@@ -256,21 +253,21 @@ const main = async () => {
                 case "ls":
                   console.log("Solid client");
                   const ls = await solid.ls();
-                  console.log(ls)
+                  console.log(ls);
                   // console.log(JSON.stringify(ls, null, 2));
                   break;
                 case "put":
                   console.log("Solid put");
                   let saved = await solid.createThing(analyzed.value);
                   break;
-// TYPES MANAGER
-case "tmls":
-tm.ls()
+                // TYPES MANAGER
+                case "tmls":
+                  tm.ls();
                   break;
-                  case "n":
-tm.new(analyzed.value)
+                case "n":
+                  tm.new(analyzed.value);
                   break;
-                  //
+                //
                 default:
                   console.log("default");
                   break;
