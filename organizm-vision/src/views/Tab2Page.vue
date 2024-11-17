@@ -40,9 +40,9 @@ import {
   IonImg,
 } from '@ionic/vue';
 import { usePhotoGallery } from '@/composables/usePhotoGallery';
-const { photos, takePhoto, loadSaved } = usePhotoGallery();
+const { photos, takePhoto} = usePhotoGallery();
 
 
 
-  onMounted(loadSaved);
+
 </script>
