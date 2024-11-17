@@ -4,7 +4,9 @@
         {
             "appId": "5995bcaa",
             "root": "organizm-vision",
-            "androidPath": "organizm-vision/android"
+            "androidPath": "organizm-vision/android",
+            "dependencyInstallCommand": "cd organizm-vision && npm install",
+            
         }
     ]
 }
