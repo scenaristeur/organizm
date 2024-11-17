@@ -140,3 +140,20 @@ VITE_SOLID_TOKEN_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxx"
 
 # 
 - no-stdin with nodedemon in dev ( known issues https://www.npmjs.com/package/inquirer#methods )https://github.com/SBoudrias/Inquirer.js/issues/844#issuecomment-736675867 
+
+# now we can mix
+- scenaristeur/os : bin install, enquirer for template/snipet
+- organizm: work flow + levelgraph db, levelgraph-jsonld does not work, Solid authentified ()
+- dady for graph & solid gestion
+- smag-studio for llm multiagents and graph configuration
+
+# solid tuto 
+- conf, prod...
+- https://github.com/CommunitySolidServer/tutorials/
+- https://github.com/mrkvon/css-setup
+
+
+# automatic Solid launch
+configure port & loglevel in .community-solid-server.config.json
+then in a separate terminal run `npm run solid`
+or without login and in memory `npm run solid_in_memory`
