@@ -7,8 +7,8 @@ import {
 } from "@capacitor/camera";
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import { Preferences } from "@capacitor/preferences";
-import { isPlatform } from '@ionic/vue';
-import { Capacitor } from '@capacitor/core';
+import { isPlatform } from "@ionic/vue";
+import { Capacitor } from "@capacitor/core";
 
 const photos = ref<UserPhoto[]>([]);
 const PHOTO_STORAGE = "photos";
@@ -20,7 +20,6 @@ const cachePhotos = () => {
 };
 watch(photos, cachePhotos);
 
-
 const convertBlobToBase64 = (blob: Blob) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -31,42 +30,45 @@ const convertBlobToBase64 = (blob: Blob) =>
     reader.readAsDataURL(blob);
   });
 
-  const savePicture = async (photo: Photo, fileName: string): Promise<UserPhoto> => {
-    let base64Data: string | Blob;
-    // "hybrid" will detect mobile - iOS or Android
-    if (isPlatform('hybrid')) {
-      const file = await Filesystem.readFile({
-        path: photo.path!,
-      });
-      base64Data = file.data;
-    } else {
-      // Fetch the photo, read as a blob, then convert to base64 format
-      const response = await fetch(photo.webPath!);
-      const blob = await response.blob();
-      base64Data = (await convertBlobToBase64(blob)) as string;
-    }
-    const savedFile = await Filesystem.writeFile({
-      path: fileName,
-      data: base64Data,
-      directory: Directory.Data,
+const savePicture = async (
+  photo: Photo,
+  fileName: string
+): Promise<UserPhoto> => {
+  let base64Data: string | Blob;
+  // "hybrid" will detect mobile - iOS or Android
+  if (isPlatform("hybrid")) {
+    const file = await Filesystem.readFile({
+      path: photo.path!,
     });
-  
-    if (isPlatform('hybrid')) {
-      // Display the new image by rewriting the 'file://' path to HTTP
-      // Details: https://ionicframework.com/docs/building/webview#file-protocol
-      return {
-        filepath: savedFile.uri,
-        webviewPath: Capacitor.convertFileSrc(savedFile.uri),
-      };
-    } else {
-      // Use webPath to display the new image instead of base64 since it's
-      // already loaded into memory
-      return {
-        filepath: fileName,
-        webviewPath: photo.webPath,
-      };
-    }
-  };
+    base64Data = file.data;
+  } else {
+    // Fetch the photo, read as a blob, then convert to base64 format
+    const response = await fetch(photo.webPath!);
+    const blob = await response.blob();
+    base64Data = (await convertBlobToBase64(blob)) as string;
+  }
+  const savedFile = await Filesystem.writeFile({
+    path: fileName,
+    data: base64Data,
+    directory: Directory.Data,
+  });
+
+  if (isPlatform("hybrid")) {
+    // Display the new image by rewriting the 'file://' path to HTTP
+    // Details: https://ionicframework.com/docs/building/webview#file-protocol
+    return {
+      filepath: savedFile.uri,
+      webviewPath: Capacitor.convertFileSrc(savedFile.uri),
+    };
+  } else {
+    // Use webPath to display the new image instead of base64 since it's
+    // already loaded into memory
+    return {
+      filepath: fileName,
+      webviewPath: photo.webPath,
+    };
+  }
+};
 
 export const usePhotoGallery = () => {
   const takePhoto = async () => {
@@ -84,10 +86,12 @@ export const usePhotoGallery = () => {
 
   const loadSaved = async () => {
     const photoList = await Preferences.get({ key: PHOTO_STORAGE });
-    const photosInPreferences = photoList.value ? JSON.parse(photoList.value) : [];
-  
+    const photosInPreferences = photoList.value
+      ? JSON.parse(photoList.value)
+      : [];
+
     // If running on the web...
-    if (!isPlatform('hybrid')) {
+    if (!isPlatform("hybrid")) {
       for (const photo of photosInPreferences) {
         const file = await Filesystem.readFile({
           path: photo.filepath,
@@ -97,13 +101,28 @@ export const usePhotoGallery = () => {
         photo.webviewPath = `data:image/jpeg;base64,${file.data}`;
       }
     }
-  
+
     photos.value = photosInPreferences;
   };
+
+  const deletePhoto = async (photo: UserPhoto) => {
+    // Remove this photo from the Photos reference data array
+    photos.value = photos.value.filter((p) => p.filepath !== photo.filepath);
+
+    // delete photo file from filesystem
+    const filename = photo.filepath.substr(photo.filepath.lastIndexOf("/") + 1);
+    await Filesystem.deleteFile({
+      path: filename,
+      directory: Directory.Data,
+    });
+  };
+
   onMounted(loadSaved);
+
   return {
     photos,
     takePhoto,
+    deletePhoto,
   };
 };
 
@@ -111,4 +130,3 @@ export interface UserPhoto {
   filepath: string;
   webviewPath?: string;
 }
-
