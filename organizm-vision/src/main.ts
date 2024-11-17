@@ -1,3 +1,6 @@
+// Above the createApp() line
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
+defineCustomElements(window);
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
