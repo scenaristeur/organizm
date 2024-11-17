@@ -3,7 +3,8 @@
     [
         {
             "appId": "5995bcaa",
-            "root": "organizm-vision"
+            "root": "organizm-vision",
+            "androidPath": "organizm-vision/android"
         }
     ]
 }
