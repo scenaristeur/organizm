@@ -27,6 +27,9 @@ class Commander {
   test_parent_id(){
     console.log("!!!!! module access his parent id of a registered module", this.parent.id)
   }
+
+
+  
 }
 
 let moduleOptions = {
