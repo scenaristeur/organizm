@@ -1,4 +1,4 @@
-import {Organ} from './classes/Organ.js'
+import {Organ} from '../classes/Organ.js'
 
 let options1 = {
   'nom': 'organ1',
