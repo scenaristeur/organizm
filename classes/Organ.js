@@ -4,17 +4,17 @@ import modele from './templates/organ_template.js'
 const defaut = {
   '@type': 'Organ',
   _boxes: { _inbox: { _paths: [] }, _outbox: { _paths: [] } },
-  _lifecycle: ["setup",
-    "before_create",
-    "create",
-    "created",
-    "before_mount",
-    "mount",
-    "mounted",
-    "living",
-    "before_unmount",
-    "unmount",
-    "unmounted"],
+  _lifecycle: ["_setup",
+    "_before_create",
+    "_create",
+    "_created",
+    "_before_mount",
+    "_mount",
+    "_mounted",
+    "_living",
+    "_before_unmount",
+    "_unmount",
+    "_unmounted"],
 }
 
 
@@ -78,8 +78,29 @@ export class Organ {
     this._lifecycleBuilder()
     this._boxesBuilder()
     this.status = "ready"
+
+    for (let a in this._lifecycle) {
+      let action = this._lifecycle[a]
+
+      if (typeof this[action] === 'function') {
+        console.log(action)
+        this.status = await this[action]()
+        console.log("NEW status", this.status)
+      } else {
+        console.log(action)
+        this.status = this._not_implemented()
+        console.log("Not changed status", this.status)
+      }
+    }
   }
 
+  _not_implemented() {
+    return this.status
+  }
+  async _setup(args = {}) {
+    console.log("_setup")
+    return "setup ok"
+  }
   _lifecycleBuilder() {
     console.log("lifecycle", this._lifecycle)
     if (this._lifecycle == undefined) this._lifecycle = defaut._lifecycle
@@ -89,13 +110,13 @@ export class Organ {
   }
 
 
-  async echo() {
+  async _echo() {
     console.log("end", this)
     return 0
   }
 
-  async start(args) {
-
+  async _start(args = {}) {
+    console.log(this.id, "start", args)
     //return ;
   }
 }
