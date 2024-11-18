@@ -20,7 +20,9 @@ let options1 = {
   ]
 }
 let options2 = {
-  'nom': 'ministre du Budget',
+  'nom': 'Sophie Dufilo',
+  "description": "Responsable des idées farfelues et saugrenues",
+  "role": ['Ministre des Idées Saugrenues'],
   'type': 'crewai_agent',
   'bidule': 'spog',
 }
