@@ -11,7 +11,8 @@ const before_create_test= function(){
 
 
 class Commander {
-  constructor(options) {  
+  constructor(options, parent) {  
+    this.parent = parent
     this.type = "Commander"
     this.name = options.name;
     this.params = options.params
@@ -22,6 +23,9 @@ class Commander {
   }
   test_function2(data){
     console.log("test function 2", data + this.resources.content)
+  }
+  test_parent_id(){
+    console.log("!!!!! module access his parent id of a registered module", this.parent.id)
   }
 }
 
@@ -53,4 +57,5 @@ organizm._echo()
 
 organizm.modules.Commander.test_function("test")
 organizm.modules.Commander.test_function2("test")
+organizm.modules.Commander.test_parent_id()
 
