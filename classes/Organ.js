@@ -23,35 +23,42 @@ export class Organ {
   constructor(options = {}) {
     this.versions = { latest: "0.0.1" }
     this.status = "init"
-        this._notifications = {
+    this._notifications = {
       _listeners: [],
       _publications: []
     }
-        this._authorities = {
+    this._authorities = {
       _parents: [],
       _childrens: [],
       _influencers: [],
       _followers: []
     }
-        // usefuls props
-        this.configs = []
-        this.circles = []
-        this.roles = []
-        this.domaines = []
-        this.policies = []
-        this.partners = []
-        this.contracts = []
-        this.budgets = []
-        this.capabilities = []
-        this.redevabilities = []
-        this.competences = []
-        this.skills = []
-        this.constraints = []
-        this.url = "http://url_describing_this_organ/code/or/doc"
-        this.functions = []
-        this.tools = []
-        this.apis = []
-        this.wallets = [{ cryptos: [] }]
+    this._tasks = {
+      todos: [],
+      doing: [],
+      done: []
+    }
+    // usefuls props
+    this.configs = []
+    this.circles = []
+    this.roles = []
+    this.domaines = []
+    this.policies = []
+    this.partners = []
+    this.contracts = []
+    this.budgets = []
+    this.capabilities = []
+    this.redevabilities = []
+    this.competences = []
+    this.success = []
+    this.celebrations = []
+    this.skills = []
+    this.constraints = []
+    this.url = "http://url_describing_this_organ/code/or/doc"
+    this.functions = []
+    this.tools = []
+    this.apis = []
+    this.wallets = [{ cryptos: [] }]
     this.init(options)
   }
 

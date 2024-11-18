@@ -27,6 +27,11 @@ let options2 = {
   'bidule': 'spog',
 }
 
+// ORGAN properties can come from (in order) 
+// - templates like ./classes/templates/organ_templates.js
+// - default of ./classes/Organ.js
+// - user defined options like options1 & options2
+
 let organ1 = new Organ(options1)
 let organ2 = new Organ(options2)
 organ1.echo()

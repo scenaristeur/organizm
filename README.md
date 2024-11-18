@@ -15,6 +15,14 @@ npm start
 # dev 
 npm run dev
 ```
+
+# install organizm globally
+```
+npm run install-g
+```
+now organizm is accessible with the command `organizm` or shortcut `oz`
+
+
 # usage
 
 By default, data is stored and persisted in  ~/.organizm/dbs/organizm.default.db using [LevelGraph](https://github.com/levelgraph/levelgraph) 
