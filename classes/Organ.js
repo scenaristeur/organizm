@@ -4,17 +4,19 @@ import modele from './templates/organ_template.js'
 const defaut = {
   '@type': 'Organ',
   _boxes: { _inbox: { _paths: [] }, _outbox: { _paths: [] } },
-  _lifecycle: ["_setup",
+  _lifecycle: [
+    "_setup",
     "_before_create",
     "_create",
-    "_created",
-    "_before_mount",
+    // "_created",
+    // "_before_mount",
     "_mount",
-    "_mounted",
+    // "_mounted",
     "_living",
-    "_before_unmount",
+    // "_before_unmount",
     "_unmount",
-    "_unmounted"],
+    // "_unmounted"
+  ],
 }
 
 
@@ -23,42 +25,43 @@ export class Organ {
   constructor(options = {}) {
     this.versions = { latest: "0.0.1" }
     this.status = "init"
-    this._notifications = {
-      _listeners: [],
-      _publications: []
-    }
-    this._authorities = {
-      _parents: [],
-      _childrens: [],
-      _influencers: [],
-      _followers: []
-    }
-    this._tasks = {
-      todos: [],
-      doing: [],
-      done: []
-    }
-    // usefuls props
-    this.configs = []
-    this.circles = []
-    this.roles = []
-    this.domaines = []
-    this.policies = []
-    this.partners = []
-    this.contracts = []
-    this.budgets = []
-    this.capabilities = []
-    this.redevabilities = []
-    this.competences = []
-    this.success = []
-    this.celebrations = []
-    this.skills = []
-    this.constraints = []
-    this.url = "http://url_describing_this_organ/code/or/doc"
-    this.functions = []
-    this.tools = []
-    this.apis = []
-    this.wallets = [{ cryptos: [] }]
+    this.modules = []
+    // this._notifications = {
+    //   _listeners: [],
+    //   _publications: []
+    // }
+    // this._authorities = {
+    //   _parents: [],
+    //   _childrens: [],
+    //   _influencers: [],
+    //   _followers: []
+    // }
+    // this._tasks = {
+    //   todos: [],
+    //   doing: [],
+    //   done: []
+    // }
+    // // usefuls props
+    // this.configs = []
+    // this.circles = []
+    // this.roles = []
+    // this.domaines = []
+    // this.policies = []
+    // this.partners = []
+    // this.contracts = []
+    // this.budgets = []
+    // this.capabilities = []
+    // this.redevabilities = []
+    // this.competences = []
+    // this.success = []
+    // this.celebrations = []
+    // this.skills = []
+    // this.constraints = []
+    // this.url = "http://url_describing_this_organ/code/or/doc"
+    // this.functions = []
+    // this.tools = []
+    // this.apis = []
+    // this.wallets = [{ cryptos: [] }]
     this.init(options)
   }
 
@@ -119,4 +122,32 @@ export class Organ {
     console.log(this.id, "start", args)
     //return ;
   }
+
+  /**
+ * Register a new type of module. This module can then be loaded via
+ * Agent.extend() and Agent.loadModule().
+ * @param {Function} constructor     A module constructor
+ */
+async registerModule  (constructor, options) {
+  console.log("registerModule constructor", constructor, typeof constructor)
+  // var type = constructor.type;
+  // console.log("constructor type", type)
+  if (typeof constructor !== 'function') {
+    throw new Error('Constructor function expected');
+  }
+  let module = new constructor(options, this);
+  let type = module.type
+  if (!type) {
+    throw new Error('Field "module.type" missing in transport constructor');
+  }
+
+  if (type in this.modules) {
+    if (this.modules[type] !== constructor) {
+      throw new Error('Module of type "' + type + '" already exists');
+    }
+  }
+
+  this.modules[type] = module
+};
+
 }

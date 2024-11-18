@@ -12,9 +12,12 @@
     "doc": "doc"
   },
   "dependencies": {
-    
+    "enquirer": "^2.4.1",
+    "open": "^10.1.0",
+    "semver": "^7.6.3",
+    "uuid": "^11.0.3",
+    "yosay": "^3.0.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js start",

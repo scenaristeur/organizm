@@ -2,6 +2,7 @@
 const debug = false
 
 import {Organ} from '../classes/Organ.js'
+import {loop_living_commander} from '../tools/loop_living_commander.js'
 
 const before_create_test= function(){
   console.log("this is before create function")
@@ -9,11 +10,47 @@ const before_create_test= function(){
 }
 
 
+class Commander {
+  constructor(options) {  
+    this.type = "Commander"
+    this.name = options.name;
+    this.params = options.params
+    this.resources = options.resources
+  }
+  test_function(data){
+    console.log("test function ", data)
+  }
+  test_function2(data){
+    console.log("test function 2", data + this.resources.content)
+  }
+}
+
+let moduleOptions = {
+  "name": "MachinTrucCommander",
+  "params": {
+    "un": "1",
+    "deux": "2",
+    "trois": "3"
+  },
+  "resources": {
+    "content": "du contenu"
+  }
+}
+
+
 let organizm_options = {
-"_before_create": before_create_test 
+"_before_create": before_create_test ,
+//"_living": loop_living_commander,
+  "type": "Commander"
 }
 
 
 let organizm = new Organ(organizm_options)
-organizm._echo()
+
 organizm._start()
+organizm.registerModule(Commander, moduleOptions)
+organizm._echo()
+
+organizm.modules.Commander.test_function("test")
+organizm.modules.Commander.test_function2("test")
+
