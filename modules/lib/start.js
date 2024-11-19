@@ -48,19 +48,16 @@ const promptcmd = () => autocomplete({
   - then "find" + henry'),
   message: '=>',
   hint: ' use "free" to switch to free mode, try "test" to initialize the base, then "ls" or "find + lulu"',
-  choices: ['new', 'ls', 'find', 'free', 'test', 'touch instead of new ?', 'browser', 'editor',/* 'neurone (mode)', 'brain (mode)', 'world (mode)',*/ '? help', 'quit']
-  //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'quit']
+  choices: ['new', 'ls', 'find', 'free', 'test', 'touch instead of new ?', 'browser', 'editor',/* 'neurone (mode)', 'brain (mode)', 'world (mode)',*/ '? help', 'exit']
+  //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'exit']
 });
 
 const promptfree = () => new Input({
-  header: yosay('What can I do for you？\n\
-  try: \n\
-  - "test" \n\
-  - then "find" + henry'),
+  header: yosay(`- cmd/free to change mode \n- exit to exit`),
   message: '=>',
   hint: 'use cmd to switch to cmd mode "',
-  // choices: ['new',  'ls', 'find', 'test', 'touch instead of new ?', 'browser','editor','free (mode)', 'neurone (mode)', 'brain (mode)', 'world (mode)', '? help', 'quit' ]
-  //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'quit']
+  // choices: ['new',  'ls', 'find', 'test', 'touch instead of new ?', 'browser','editor','free (mode)', 'neurone (mode)', 'brain (mode)', 'world (mode)', '? help', 'exit' ]
+  //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'exit']
 });
 
 const typePrompt = () => autocomplete({
@@ -68,7 +65,7 @@ const typePrompt = () => autocomplete({
   message: '=>',
   hint: 'neurone, brain, world',
   choices: ['neurone', 'brain', 'world', 'other', 'back']
-  //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'quit']
+  //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'exit']
 });
 
 // const prompt2 = () => autocomplete({
@@ -77,7 +74,7 @@ const typePrompt = () => autocomplete({
 //   choices: ['BACK']
 // });
 
-let editionPrompt = new Snippet({
+let editionPromptConfig = {
   name: 'config_file',
   message: "new",
   required: true,
@@ -135,94 +132,97 @@ let editionPrompt = new Snippet({
   - Name: \${name}
   - Description: \${description}
   - Type: \${type}`
-});
+}
 
 
 
 async function loop_root(opts) {
-  // let answer = await prompt() avec prompt1()
-  let answer = mode == 'free' ? await promptfree().run() : await promptcmd()
-  if (answer != 'quit') {
-    switch (answer) {
-      case "cmd":
-        mode = "cmd"
-        //loop_root(opts)
-        break;
-      case "free":
-        mode = "free"
-        //loop_root(opts)
-        break;
-      case "test":
-        console.log("test")
-        // await opts.commander.core.bases.levelgraphJsonld.test()
+let answer = null
 
-        console.log('test')
-        // await opts.commander.core.bases.communitySolidServer.test()
-        loop_root(opts);
-        // console.log(opts.commander.core.bases.levelgraphJsonld)
-        break;
-      case "new":
-        console.log("new")
-        let type = await typePrompt()
-        if (type == "back") {
-          loop_root(opts)
-        } else {
-          editionPrompt.fields.push({ name: 'type', initial: type })
-          let neurone = await editionPrompt.run()
-          console.log("should create a new edition Prompt as for now the second time we pass it is already 100% completed")
-          console.log("Neurone", neurone)
-          let result = await opts.commander.parent.storage.update(neurone)
-          console.log("result", result)
-          //await opts.commander.core.bases.communitySolidServer.create(neurone.values)
-          loop_root(opts)
-        }
-        break;
-      case "ls":
-        console.log("ls")
-        let result = await opts.commander.parent.storage.ls()
-        console.log("result", result)
-        //      await opts.commander.core.bases.communitySolidServer.onCommand({command:'ls'})
-        break;
-      case "find":
-        console.log("find")
-        let what = await whatPrompt.run()
-        console.log(what)
-        // await opts.commander.core.bases.communitySolidServer.find({what: what})
-        break;
-      case "editor":
-        console.log("editor")
-        // await open('https://sindresorhus.com');
-        // Open an app
-        // console.log(JSON.stringify(openEditor, null, 2))
+while (answer != 'exit') {
+let prompt  = mode == 'free' ?  promptfree().run() :  promptcmd()
+answer = await prompt
+answer = answer.trim()
+console.log("answer", answer)
+switch (answer) {
+  case "cmd":
+    mode = "cmd"
+    //loop_root(opts)
+    break;
+  case "free":
+    mode = "free"
+    //loop_root(opts)
+    break;
+  case "test":
+    console.log("test")
+    // await opts.commander.core.bases.levelgraphJsonld.test()
 
-        // await open.openApp('atom',{arguments: ['README.md:8:5']});
-        await open.openApp('code', { arguments: ['README.md:8:5'] });
-        // openEditor([
-        //   {
-        //     file: 'readme.md',
-        //     line: 10,
-        //     column: 2,
-        //   }
-        // ]);
-        break;
-      case "browser":
-        console.log("browser")
-        await open('https://scenaristeur.github.io/ipgs');
-        break;
-      default:
-        console.log("unknown answer", answer)
-
+    console.log('test')
+    // await opts.commander.core.bases.communitySolidServer.test()
+    //loop_root(opts);
+    // console.log(opts.commander.core.bases.levelgraphJsonld)
+    break;
+  case "new":
+    console.log("new")
+    let type = await typePrompt()
+    if (type == "back") {
+      console.log("back")
+      //loop_root(opts)
+    } else {
+      console.log("type", type)
+      let editionPrompt = new Snippet(editionPromptConfig) 
+      editionPrompt.fields.push({ name: 'type', initial: type })
+      console.log("editionPrompt", editionPrompt)
+      let neurone = await editionPrompt.run()
+      console.log("Neurone", neurone)
+      let result = await opts.commander.parent.memory.update(neurone)
+      console.log("result", result)
+      //await opts.commander.core.bases.communitySolidServer.create(neurone.values)
+      //loop_root(opts)
     }
-    loop_root(opts);
-    // prompt2().then(name => {
-    //   console.log('creating a '+type+' with name',name)
-    //   // if (answer1 === 'BACK') {
-    //   // TODO can not work?
-    //   loop_root();
-    //   // }
-    // }).catch(console.error);
-  }
+    break;
+  case "ls":
+    console.log("ls")
+    let result = await opts.commander.parent.memory.ls()
+    console.log("result", result)
+    //      await opts.commander.core.bases.communitySolidServer.onCommand({command:'ls'})
+    break;
+  case "find":
+    console.log("find")
+    let what = await whatPrompt.run()
+    console.log(what)
+    // await opts.commander.core.bases.communitySolidServer.find({what: what})
+    break;
+  case "editor":
+    console.log("editor")
+    // await open('https://sindresorhus.com');
+    // Open an app
+    // console.log(JSON.stringify(openEditor, null, 2))
+
+    // await open.openApp('atom',{arguments: ['README.md:8:5']});
+    await open.openApp('code', { arguments: ['README.md:8:5'] });
+    // openEditor([
+    //   {
+    //     file: 'readme.md',
+    //     line: 10,
+    //     column: 2,
+    //   }
+    // ]);
+    break;
+  case "browser":
+    console.log("browser")
+    await open('https://scenaristeur.github.io/ipgs');
+    break;
+  default:
+    console.log("unknown answer", answer)
+
 }
+
+}
+
+
+}
+
 
 
 export default async function start(opts) {

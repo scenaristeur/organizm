@@ -26,11 +26,12 @@ export class Organ {
     this.versions = { latest: "0.0.1" }
     this.status = "init"
     this.modules = []
-    this.storage = {
+    this.memory = {
       data: {},
-      update: this._updateStorage.bind(this),
-      ls: this._lsStorage.bind(this)
+      update: this._updateMemory.bind(this),
+      ls: this._lsMemory.bind(this)
     }
+    // this.persistentStorage
 
 
 
@@ -73,20 +74,20 @@ export class Organ {
     // this.wallets = [{ cryptos: [] }]
     this.init(options)
   }
-  async _updateStorage(thing) {
+  async _updateMemory(thing) {
     if (thing.id == undefined)
       thing.id = uuidv4()
-    console.log("storage", this.storage)
-    this.storage.data[thing.id] = thing
+    console.log("memory", this.memory)
+    this.memory.data[thing.id] = thing
     return "updated", thing.id
   }
 
-  async _lsStorage(thing = null) {
+  async _lsMemory(thing = null) {
     if (thing != null) {
-      console.log("should filter storage.data with ", thing)
+      console.log("should filter memory.data with ", thing)
     } else {
-      console.log("should return storage data")
-      return this.storage.data
+      console.log("should return memory data")
+      return this.memory.data
     }
   }
   async init(options) {
@@ -119,7 +120,7 @@ export class Organ {
           console.log("Not changed status", this.status)
         }
       }
-      console.log("the storage", this.storage)
+      console.log("the memory", this.memory)
     }
 
     _not_implemented() {
