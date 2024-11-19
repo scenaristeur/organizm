@@ -48,7 +48,7 @@ const promptcmd = () => autocomplete({
   - then "find" + henry'),
   message: '=>',
   hint: ' use "free" to switch to free mode, try "test" to initialize the base, then "ls" or "find + lulu"',
-  choices: ['new', 'ls', 'find', 'free', 'test', 'touch instead of new ?', 'browser', 'editor',/* 'neurone (mode)', 'brain (mode)', 'world (mode)',*/ '? help', 'exit']
+  choices: ['new', 'ls', 'free', 'memory', 'storage','find', 'test', 'browser', 'editor',/* 'neurone (mode)', 'brain (mode)', 'world (mode)',*/ '? help', 'exit']
   //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'exit']
 });
 
@@ -153,6 +153,12 @@ switch (answer) {
     mode = "free"
     //loop_root(opts)
     break;
+    case "memory":
+      opts.commander.parent.switchStorage("memory")
+    break;
+    case "storage":
+      opts.commander.parent.switchStorage("storage")
+    break;
   case "test":
     console.log("test")
     // await opts.commander.core.bases.levelgraphJsonld.test()
@@ -171,11 +177,13 @@ switch (answer) {
     } else {
       console.log("type", type)
       let editionPrompt = new Snippet(editionPromptConfig) 
+     // remove the type de  editionPrompt.fields
+     editionPromptConfig.fields = editionPromptConfig.fields.filter(f => f.name != "type")
       editionPrompt.fields.push({ name: 'type', initial: type })
       console.log("editionPrompt", editionPrompt)
       let neurone = await editionPrompt.run()
       console.log("Neurone", neurone)
-      let result = await opts.commander.parent.memory.update(neurone)
+      let result = await opts.commander.parent._update(neurone)
       console.log("result", result)
       //await opts.commander.core.bases.communitySolidServer.create(neurone.values)
       //loop_root(opts)
@@ -183,7 +191,7 @@ switch (answer) {
     break;
   case "ls":
     console.log("ls")
-    let result = await opts.commander.parent.memory.ls()
+    let result = await opts.commander.parent._ls()
     console.log("result", result)
     //      await opts.commander.core.bases.communitySolidServer.onCommand({command:'ls'})
     break;
