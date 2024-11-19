@@ -79,7 +79,7 @@ const typePrompt = () => autocomplete({
 
 let editionPrompt = new Snippet({
   name: 'config_file',
-  message : "edit",
+  message : "new",
   required: true,
   fields: [
     {name: 'name', message: 'Neurone name'},
@@ -170,14 +170,16 @@ async function loop_root(opts) {
         editionPrompt.fields.push({ name: 'type', initial: type})
         let neurone = await editionPrompt.run()
         console.log("Neurone", neurone)
-
+        let result = await opts.commander.parent.storage.update(neurone)
+        console.log("result", result)
         //await opts.commander.core.bases.communitySolidServer.create(neurone.values)
         loop_root(opts)
       }
       break;
       case "ls":
       console.log("ls")
-console.log("ls")
+let result = await opts.commander.parent.storage.ls()
+console.log("result", result)
 //      await opts.commander.core.bases.communitySolidServer.onCommand({command:'ls'})
       break;
       case "find":

@@ -26,6 +26,15 @@ export class Organ {
     this.versions = { latest: "0.0.1" }
     this.status = "init"
     this.modules = []
+    this.storage = {
+      data: {},
+      update: this._updateStorage.bind(this),
+      ls: this._lsStorage.bind(this)
+    }
+
+
+
+
     // this._notifications = {
     //   _listeners: [],
     //   _publications: []
@@ -64,90 +73,106 @@ export class Organ {
     // this.wallets = [{ cryptos: [] }]
     this.init(options)
   }
+  async _updateStorage(thing) {
+    if (thing.id == undefined)
+      thing.id = uuidv4()
+    console.log("storage", this.storage)
+    this.storage.data[thing.id] = thing
+    return "updated", thing.id
+  }
 
-  async init(options) {
-    if (options['@id']) {
-      console.log("retrieve", options['@id'])
+  async _lsStorage(thing = null) {
+    if (thing != null) {
+      console.log("should filter storage.data with ", thing)
     } else {
-      Object.assign(this, modele);
-      // update basic props
-      this.id = uuidv4()
-      this.type = "Organ"
-      this.created = Date.now()
-      // updating with options
-      Object.assign(this, options);
+      console.log("should return storage data")
+      return this.storage.data
     }
-    console.log("init ", this.uuid)
-    this._lifecycleBuilder()
-    this._boxesBuilder()
-    this.status = "ready"
-
-    for (let a in this._lifecycle) {
-      let action = this._lifecycle[a]
-
-      if (typeof this[action] === 'function') {
-        console.log(action)
-        this.status = await this[action]()
-        console.log("NEW status", this.status)
+  }
+  async init(options) {
+      if (options['@id']) {
+        console.log("retrieve", options['@id'])
       } else {
-        console.log(action)
-        this.status = this._not_implemented()
-        console.log("Not changed status", this.status)
+        Object.assign(this, modele);
+        // update basic props
+        this.id = uuidv4()
+        this.type = "Organ"
+        this.created = Date.now()
+        // updating with options
+        Object.assign(this, options);
       }
-    }
-  }
+      console.log("init ", this.uuid)
+      this._lifecycleBuilder()
+      this._boxesBuilder()
+      this.status = "ready"
 
-  _not_implemented() {
-    return this.status
-  }
+      for (let a in this._lifecycle) {
+        let action = this._lifecycle[a]
+
+        if (typeof this[action] === 'function') {
+          console.log(action)
+          this.status = await this[action]()
+          console.log("NEW status", this.status)
+        } else {
+          console.log(action)
+          this.status = this._not_implemented()
+          console.log("Not changed status", this.status)
+        }
+      }
+      console.log("the storage", this.storage)
+    }
+
+    _not_implemented() {
+      return this.status
+    }
   async _setup(args = {}) {
-    console.log("_setup")
-    return "setup ok"
-  }
-  _lifecycleBuilder() {
-    console.log("lifecycle", this._lifecycle)
-    if (this._lifecycle == undefined) this._lifecycle = defaut._lifecycle
-  }
-  _boxesBuilder() {
-    if (this._boxes == undefined) this._boxes = defaut._boxes
-  }
+      console.log("_setup")
+      return "setup ok"
+    }
+    _lifecycleBuilder() {
+      console.log("lifecycle", this._lifecycle)
+      if (this._lifecycle == undefined) this._lifecycle = defaut._lifecycle
+    }
+    _boxesBuilder() {
+      if (this._boxes == undefined) this._boxes = defaut._boxes
+    }
 
 
   async _echo() {
-    console.log("end", this)
-    return 0
-  }
+      console.log("end", this)
+      return 0
+    }
 
   async _start(args = {}) {
-    console.log(this.id, "start", args)
-    //return ;
-  }
+      console.log(this.id, "start", args)
+      //return ;
+    }
 
   /**
  * Register a new type of module. This module can then be loaded via
  * Agent.extend() and Agent.loadModule().
  * @param {Function} constructor     A module constructor
  */
-async registerModule  (constructor, options) {
-  console.log("registerModule constructor", constructor, typeof constructor)
-  // var type = constructor.type;
-  // console.log("constructor type", type)
-  if (typeof constructor !== 'function') {
-    throw new Error('Constructor function expected');
-  }
-  let module = new constructor(options, this);
-  let type = module.type
-  if (!type) {
-    throw new Error('Field "module.type" missing in transport constructor');
-  }
+async registerModule(constructor, options) {
+      console.log("registerModule constructor", constructor, typeof constructor)
+      // var type = constructor.type;
+      // console.log("constructor type", type)
+      if (typeof constructor !== 'function') {
+        throw new Error('Constructor function expected');
+      }
+      let module = new constructor(options, this);
+      let type = module.type
+      if (!type) {
+        throw new Error('Field "module.type" missing in transport constructor');
+      }
 
-  if (type in this.modules) {
-    if (this.modules[type] !== constructor) {
-      throw new Error('Module of type "' + type + '" already exists');
-    }
+      if (type in this.modules) {
+        if (this.modules[type] !== constructor) {
+          throw new Error('Module of type "' + type + '" already exists');
+        }
+      }
+
+      this.modules[type] = module
+    };
+
   }
-
-  this.modules[type] = module
-};
-
-}

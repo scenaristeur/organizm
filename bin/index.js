@@ -28,4 +28,6 @@ organizm.modules.Example.test_function("test")
 organizm.modules.Example.test_function2("test")
 organizm.modules.Example.test_parent_id()
 
+// Start the commander
+
 organizm.modules.Commander.start()
