@@ -8,7 +8,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
 import { v4 as uuidv4 } from 'uuid';
-const { Input, Confirm , Snippet, autocomplete } = require('enquirer');
+const { Input, Confirm, Snippet, autocomplete } = require('enquirer');
 import yosay from 'yosay';
 const semver = require('semver');
 // import openEditor from 'open-editor';
@@ -48,7 +48,7 @@ const promptcmd = () => autocomplete({
   - then "find" + henry'),
   message: '=>',
   hint: ' use "free" to switch to free mode, try "test" to initialize the base, then "ls" or "find + lulu"',
-  choices: ['new',  'ls', 'find',  'free', 'test', 'touch instead of new ?', 'browser','editor',/* 'neurone (mode)', 'brain (mode)', 'world (mode)',*/ '? help', 'quit' ]
+  choices: ['new', 'ls', 'find', 'free', 'test', 'touch instead of new ?', 'browser', 'editor',/* 'neurone (mode)', 'brain (mode)', 'world (mode)',*/ '? help', 'quit']
   //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'quit']
 });
 
@@ -79,10 +79,10 @@ const typePrompt = () => autocomplete({
 
 let editionPrompt = new Snippet({
   name: 'config_file',
-  message : "new",
+  message: "new",
   required: true,
   fields: [
-    {name: 'name', message: 'Neurone name'},
+    { name: 'name', message: 'Neurone name' },
     //{name: 'db_name', message: 'Database Name', initial: 'Universe'},
     //{name: 'db_path', message: 'Database Path', initial: process.env.HOME+"/.os/UniverseDb"},
     {
@@ -108,7 +108,7 @@ let editionPrompt = new Snippet({
       name: '@id',
       message: "Auto generated",
       required: false,
-      initial: "http://local/base/"+uuidv4()
+      initial: "http://local/base/" + uuidv4()
     }
     // {
     //   name: 'base_opts',
@@ -146,70 +146,71 @@ async function loop_root(opts) {
     switch (answer) {
       case "cmd":
         mode = "cmd"
-      //loop_root(opts)
-      break;
+        //loop_root(opts)
+        break;
       case "free":
         mode = "free"
         //loop_root(opts)
         break;
       case "test":
-      console.log("test")
-     // await opts.commander.core.bases.levelgraphJsonld.test()
+        console.log("test")
+        // await opts.commander.core.bases.levelgraphJsonld.test()
 
-     console.log('test')
-      // await opts.commander.core.bases.communitySolidServer.test()
-      loop_root(opts);
-      // console.log(opts.commander.core.bases.levelgraphJsonld)
-      break;
+        console.log('test')
+        // await opts.commander.core.bases.communitySolidServer.test()
+        loop_root(opts);
+        // console.log(opts.commander.core.bases.levelgraphJsonld)
+        break;
       case "new":
-      console.log("new")
-      let type = await typePrompt()
-      if (type == "back"){
-        loop_root(opts)
-      }else{
-        editionPrompt.fields.push({ name: 'type', initial: type})
-        let neurone = await editionPrompt.run()
-        console.log("Neurone", neurone)
-        let result = await opts.commander.parent.storage.update(neurone)
-        console.log("result", result)
-        //await opts.commander.core.bases.communitySolidServer.create(neurone.values)
-        loop_root(opts)
-      }
-      break;
+        console.log("new")
+        let type = await typePrompt()
+        if (type == "back") {
+          loop_root(opts)
+        } else {
+          editionPrompt.fields.push({ name: 'type', initial: type })
+          let neurone = await editionPrompt.run()
+          console.log("should create a new edition Prompt as for now the second time we pass it is already 100% completed")
+          console.log("Neurone", neurone)
+          let result = await opts.commander.parent.storage.update(neurone)
+          console.log("result", result)
+          //await opts.commander.core.bases.communitySolidServer.create(neurone.values)
+          loop_root(opts)
+        }
+        break;
       case "ls":
-      console.log("ls")
-let result = await opts.commander.parent.storage.ls()
-console.log("result", result)
-//      await opts.commander.core.bases.communitySolidServer.onCommand({command:'ls'})
-      break;
+        console.log("ls")
+        let result = await opts.commander.parent.storage.ls()
+        console.log("result", result)
+        //      await opts.commander.core.bases.communitySolidServer.onCommand({command:'ls'})
+        break;
       case "find":
-      console.log("find")
-      let what = await whatPrompt.run()
-      console.log(what)
-      // await opts.commander.core.bases.communitySolidServer.find({what: what})
-      break;
+        console.log("find")
+        let what = await whatPrompt.run()
+        console.log(what)
+        // await opts.commander.core.bases.communitySolidServer.find({what: what})
+        break;
       case "editor":
-      console.log("editor")
-      // await open('https://sindresorhus.com');
-      // Open an app
-      // console.log(JSON.stringify(openEditor, null, 2))
+        console.log("editor")
+        // await open('https://sindresorhus.com');
+        // Open an app
+        // console.log(JSON.stringify(openEditor, null, 2))
 
-      // await open.openApp('atom',{arguments: ['README.md:8:5']});
-      await open.openApp('code',{arguments: ['README.md:8:5']});
-      // openEditor([
-      //   {
-      //     file: 'readme.md',
-      //     line: 10,
-      //     column: 2,
-      //   }
-      // ]);
-      break;
+        // await open.openApp('atom',{arguments: ['README.md:8:5']});
+        await open.openApp('code', { arguments: ['README.md:8:5'] });
+        // openEditor([
+        //   {
+        //     file: 'readme.md',
+        //     line: 10,
+        //     column: 2,
+        //   }
+        // ]);
+        break;
       case "browser":
-      console.log("browser")
-      await open('https://scenaristeur.github.io/ipgs');
-      break;
+        console.log("browser")
+        await open('https://scenaristeur.github.io/ipgs');
+        break;
       default:
-      console.log("unknown answer", answer)
+        console.log("unknown answer", answer)
 
     }
     loop_root(opts);
