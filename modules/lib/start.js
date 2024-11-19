@@ -34,19 +34,32 @@ import open from 'open';
 // let answer
 let host = "http://localhost:3000"
 
+let mode = "free"
+
 const whatPrompt = new Input({
   name: 'what',
   message: 'What do ou want to find?'
 });
 
-const prompt = () => autocomplete({
+const promptcmd = () => autocomplete({
   header: yosay('What can I do for you？\n\
   try: \n\
   - "test" \n\
   - then "find" + henry'),
   message: '=>',
-  hint: 'try "test" to initialize the base, then "ls" or "find + lulu"',
-  choices: ['new',  'ls', 'find', 'test', 'touch instead of new ?', 'browser','editor','free (mode)', 'neurone (mode)', 'brain (mode)', 'world (mode)', '? help', 'quit' ]
+  hint: ' use "free" to switch to free mode, try "test" to initialize the base, then "ls" or "find + lulu"',
+  choices: ['new',  'ls', 'find',  'free', 'test', 'touch instead of new ?', 'browser','editor',/* 'neurone (mode)', 'brain (mode)', 'world (mode)',*/ '? help', 'quit' ]
+  //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'quit']
+});
+
+const promptfree = () => new Input({
+  header: yosay('What can I do for you？\n\
+  try: \n\
+  - "test" \n\
+  - then "find" + henry'),
+  message: '=>',
+  hint: 'use cmd to switch to cmd mode "',
+  // choices: ['new',  'ls', 'find', 'test', 'touch instead of new ?', 'browser','editor','free (mode)', 'neurone (mode)', 'brain (mode)', 'world (mode)', '? help', 'quit' ]
   //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'quit']
 });
 
@@ -127,9 +140,18 @@ let editionPrompt = new Snippet({
 
 
 async function loop_root(opts) {
-  let answer = await prompt()
+  // let answer = await prompt() avec prompt1()
+  let answer = mode == 'free' ? await promptfree().run() : await promptcmd()
   if (answer != 'quit') {
     switch (answer) {
+      case "cmd":
+        mode = "cmd"
+      //loop_root(opts)
+      break;
+      case "free":
+        mode = "free"
+        //loop_root(opts)
+        break;
       case "test":
       console.log("test")
      // await opts.commander.core.bases.levelgraphJsonld.test()
