@@ -17,6 +17,18 @@ let organizm_options = {
   "type": "Organizm"
 }
 
+
+// let organizm_remote_options = {
+// "config_url" : "https://raw.githubusercontent.com/scenaristeur/organizm/refs/heads/main/remote/config_for_remote_Organizm.js",
+// "another option for remote" : "machin"
+// }
+
+
+// let organizmFromRemote = new Organ(organizm_remote_options)
+// organizmFromRemote._echo()
+
+
+
 let organizm = new Organ(organizm_options)
 
 organizm._start()

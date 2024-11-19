@@ -95,18 +95,18 @@ export class Organ {
       console.log("should filter storage with ", thing);
     } else {
       const files = await fs.readdir(path);
-      // const data = {}
-      // for (const file of files) {
-      //   const filePath = path + "/" + file
-      //   const stats = await fs.stat(filePath)
-      //   if (stats.isDirectory()) {
-      //     data[file] = await this._lsStorage({ path: filePath })
-      //   } else {
-      //     data[file] = await fs.readFile(filePath, 'utf8')
-      //   }
-      // }
+      const data = {}
+      for (const file of files) {
+        const filePath = path + "/" + file
+        const stats = await fs.stat(filePath)
+        if (stats.isDirectory()) {
+          data[file] = await this._lsStorage({ path: filePath })
+        } else {
+          data[file] = await fs.readFile(filePath, 'utf8')
+        }
+      }
 
-      return files;
+      return data;
     }
   }
 
@@ -144,6 +144,33 @@ export class Organ {
       this.created = Date.now();
       // updating with options
       Object.assign(this, options);
+      if (options.config_url != undefined){
+try {
+  const response = await fetch(options.config_url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch config: ${response.statusText}`);
+  }
+  if(options.config_url.endsWith(".json")){
+    const config = await response.json();
+    Object.assign(this, config);
+  }else if (options.config_url.endsWith(".js")){
+    console.log("import", options.config_url)
+  //   await import(options.config_url).then((SomeModule) => {
+  //     var module = new SomeModule();
+  //     // ...
+  //     console.log("module", module);
+  //     Object.assign(this, module);
+  // })
+
+  }
+
+} catch (error) {
+  console.error("Error loading remote config:", error);
+}
+
+
+
+      }
     }
     console.log("init ", this.uuid);
     this._lifecycleBuilder();
