@@ -144,29 +144,29 @@ export class Organ {
       this.created = Date.now();
       // updating with options
       Object.assign(this, options);
-      if (options.config_url != undefined){
-try {
-  const response = await fetch(options.config_url);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch config: ${response.statusText}`);
-  }
-  if(options.config_url.endsWith(".json")){
-    const config = await response.json();
-    Object.assign(this, config);
-  }else if (options.config_url.endsWith(".js")){
-    console.log("import", options.config_url)
-  //   await import(options.config_url).then((SomeModule) => {
-  //     var module = new SomeModule();
-  //     // ...
-  //     console.log("module", module);
-  //     Object.assign(this, module);
-  // })
+      if (options.config_url != undefined) {
+        try {
+          const response = await fetch(options.config_url);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch config: ${response.statusText}`);
+          }
+          if (options.config_url.endsWith(".json")) {
+            const config = await response.json();
+            Object.assign(this, config);
+          } else if (options.config_url.endsWith(".js")) {
+            console.log("import", options.config_url)
+            //   await import(options.config_url).then((SomeModule) => {
+            //     var module = new SomeModule();
+            //     // ...
+            //     console.log("module", module);
+            //     Object.assign(this, module);
+            // })
 
-  }
+          }
 
-} catch (error) {
-  console.error("Error loading remote config:", error);
-}
+        } catch (error) {
+          console.error("Error loading remote config:", error);
+        }
 
 
 

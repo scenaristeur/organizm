@@ -13,9 +13,13 @@
   },
   "dependencies": {
     "enquirer": "^2.4.1",
+    "minimist": "^1.2.8",
     "open": "^10.1.0",
     "semver": "^7.6.3",
+    "unique-names-generator": "^4.7.1",
     "uuid": "^11.0.3",
+    "y-websocket": "^2.0.4",
+    "yjs": "^13.6.20",
     "yosay": "^3.0.0"
   },
   "scripts": {
