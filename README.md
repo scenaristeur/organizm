@@ -165,3 +165,15 @@ VITE_SOLID_TOKEN_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxx"
 configure port & loglevel in .community-solid-server.config.json
 then in a separate terminal run `npm run solid`
 or without login and in memory `npm run solid_in_memory`
+
+
+# Transport
+## realtime / subscribtion / notification
+- rpc (2 librairies WIP) see modules folder
+- yjs
+- websocket
+
+## inbox/outbox
+- http 
+- solid
+
