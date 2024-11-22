@@ -177,3 +177,7 @@ or without login and in memory `npm run solid_in_memory`
 - http 
 - solid
 
+## Interoperability exchange data in Industry
+- https://node-opcua.github.io/
+- https://opcfoundation.org/about/what-is-opc/
+- https://github.com/node-opcua/bbblessed-contrib
