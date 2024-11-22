@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import blessed from 'blessed';
-import {render} from 'react-blessed';
+// import blessed from 'blessed';
+// import {render} from 'react-blessed';
 
 /**
  * Stylesheet
@@ -285,17 +285,19 @@ class Stats extends Component {
   }
 }
 
-/**
- * Rendering the screen.
- */
-const screen = blessed.screen({
-  autoPadding: true,
-  smartCSR: true,
-  title: 'react-blessed dashboard'
-});
+// /**
+//  * Rendering the screen.
+//  */
+// const screen = blessed.screen({
+//   autoPadding: true,
+//   smartCSR: true,
+//   title: 'react-blessed dashboard'
+// });
 
-screen.key(['escape', 'q', 'C-c'], function (ch, key) {
-  return process.exit(0);
-});
+// screen.key(['escape', 'q', 'C-c'], function (ch, key) {
+//   return process.exit(0);
+// });
 
-render(<Dashboard />, screen);
+// render(<Dashboard />, screen);
+
+export { Dashboard }
