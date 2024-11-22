@@ -10,7 +10,8 @@ console.log(argv);
 import {Organ} from '../classes/Organ.js'
 import {Commander, commanderOptions } from '../modules/commander.js'
 import {Example, exampleOptions} from '../modules/example.js'
-import {RpcWebsocket, rpcWebsocketOptions} from '../modules/rpc-websocket.js'
+import {Dashboard, dashboardOptions} from '../modules/dashboard/index.js'
+// import {RpcWebsocket, rpcWebsocketOptions} from '../modules/rpc-websocket.js'
 // import {loop_living_commander} from '../tools/loop_living_commander.js'
 
 const before_create_test= function(){
@@ -41,20 +42,31 @@ let organizm = new Organ(organizm_options)
 organizm._start()
 organizm.registerModule(Example, exampleOptions)
 organizm.registerModule(Commander, commanderOptions)
+organizm.registerModule(Dashboard, dashboardOptions)
 
 organizm.modules.Example.test_function("test")
 organizm.modules.Example.test_function2("test")
 organizm.modules.Example.test_parent_id()
 
 // RPC websocket
-if (argv.rpc = "server"){
-  console.log("rpc param is server")
-  rpcWebsocketOptions.isServer=true
-}
-organizm.registerModule(RpcWebsocket, rpcWebsocketOptions)
-// organizm.modules.RpcWebsocket.test_function2("test")
-organizm.modules.RpcWebsocket.start()
+// if (argv.rpc = "server"){
+//   console.log("rpc param is server")
+//   rpcWebsocketOptions.isServer=true
+// }
+// organizm.registerModule(RpcWebsocket, rpcWebsocketOptions)
+// // organizm.modules.RpcWebsocket.test_function2("test")
+// organizm.modules.RpcWebsocket.start()
 organizm._echo()
 
 // Start the commander
+
 // organizm.modules.Commander.start()
+// organizm.modules.Dashboard.start()
+
+ if(argv.d == true){
+    organizm.modules.Dashboard.start()
+}else {
+  console.error("Run `orz -c` (for cli) or `orz -d` (for dashboard)")
+  organizm.modules.Commander.start()
+}
+

@@ -1,5 +1,9 @@
+## react blessed contrib
+- a étudier de plus près https://github.com/dundalek/react-blessed-contrib
 
-TUI / Terminal ui 
+
+
+# TUI / Terminal ui 
 - https://www.reddit.com/r/learnjavascript/comments/16z2qn9/best_javascript_libraries_for_tui_development/?rdt=34147
 - go https://github.com/charmbracelet/bubbletea
 - ink 

@@ -181,3 +181,7 @@ or without login and in memory `npm run solid_in_memory`
 - https://node-opcua.github.io/
 - https://opcfoundation.org/about/what-is-opc/
 - https://github.com/node-opcua/bbblessed-contrib
+
+
+## react blessed contrib
+- a étudier de plus près https://github.com/dundalek/react-blessed-contrib
