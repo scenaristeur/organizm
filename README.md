@@ -71,9 +71,10 @@ You can can cmd and press enter to show the differents available commands or typ
 ![alt text](./doc/images/commander6_cool_neurone.png)
 
 ## list available organs
-- with the "ls" command
+- with the "ls" command , ordered by reverse modification time
 
 ![alt text](./doc/images/commander7_list_organs.png)
+
 
 
 
