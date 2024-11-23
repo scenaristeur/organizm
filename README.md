@@ -78,9 +78,9 @@ You can can cmd and press enter to show the differents available commands or typ
 
 
 # storage 
-By default ./classes/Organ.js store data using fs filesystem in `this.localPath = process.env.HOME + "/.organizm/data/";`
+By default ./classes/Organ.js store data using fs filesystem in `this.localPath = process.env.HOME + "/.organizm/data/";` . storage is persistent and if you close orz and reopen, you will retrieve your data.
 
-it can be switched from storage to memory with the available options `memory` and `storage` in availables commands accessed with 'cmd' (see above)
+It can be switched from storage (persistant) to memory with the available options `memory` and `storage` in availables commands accessed with 'cmd' (see above)
 
 
 

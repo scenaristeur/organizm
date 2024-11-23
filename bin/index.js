@@ -56,7 +56,11 @@ organizm.modules.Example.test_parent_id()
 // organizm.registerModule(RpcWebsocket, rpcWebsocketOptions)
 // // organizm.modules.RpcWebsocket.test_function2("test")
 // organizm.modules.RpcWebsocket.start()
-organizm._echo()
+
+if (argv._.includes("debug")){
+  organizm._echo()
+}
+
 
 // Start the commander
 

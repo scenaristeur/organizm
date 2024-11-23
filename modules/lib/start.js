@@ -208,9 +208,9 @@ async function loop_root(opts) {
             (f) => f.name != "type"
           );
           editionPrompt.fields.push({ name: "type", initial: type });
-          console.log("editionPrompt", editionPrompt);
+          //console.log("editionPrompt", editionPrompt);
           let neurone = await editionPrompt.run();
-          console.log("Neurone", neurone);
+          //console.log("Neurone", neurone);
           let result = await opts.commander.parent._update(neurone);
           console.log("result", result);
           //await opts.commander.core.bases.communitySolidServer.create(neurone.values)
@@ -220,7 +220,14 @@ async function loop_root(opts) {
       case "ls":
         console.log("ls");
         let result = await opts.commander.parent._ls();
-        console.log("result", result);
+        // console.log("result", result);
+let formated = await opts.commander.parent.formatResultObject(result)
+console.table( formated)
+
+
+
+
+
         //      await opts.commander.core.bases.communitySolidServer.onCommand({command:'ls'})
         break;
       case "find":
