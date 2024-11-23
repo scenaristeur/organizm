@@ -8,7 +8,7 @@ require('@babel/register')({
   import {render} from 'react-blessed';
   
 
-const Dashboard = require('./dashboard.jsx');
+import Dashboard from './dashboardTestParams.js'
 // require('./form.jsx');
 // require('./context.jsx');
 
@@ -25,4 +25,4 @@ screen.key(['escape', 'q', 'C-c'], function (ch, key) {
   return process.exit(0);
 });
 
-render(<Dashboard name="Bob DAsh" />, screen);
+render(Dashboard , screen);

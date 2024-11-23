@@ -27,7 +27,7 @@ export class Dashboard {
       console.log("dashboard start", opts)
       let params = {name: "Bob"}
      let dashboardComponent = require('./react-blessed/dashboard.jsx')//(params)//(this.parent, opts)
-     
+
     }
     
   }

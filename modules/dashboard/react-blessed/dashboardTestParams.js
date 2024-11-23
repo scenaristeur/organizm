@@ -26,7 +26,7 @@ class Dashboard extends Component {
     super(props);
 
     this.state = {
-      name: 'name in dashboard'
+      name: props.name
     };
 
     this.submit = data => this.setState(state => ({name: data}));
@@ -300,4 +300,4 @@ class Stats extends Component {
 
 // render(<Dashboard />, screen);
 
-export { Dashboard }
+export default Dashboard
