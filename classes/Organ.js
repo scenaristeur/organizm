@@ -90,68 +90,69 @@ export class Organ {
   }
 
   async _lsStorage(path = this.localPath) {
-// console.log("ls storage", path)
-      const files = await fs.readdir(path);
-      const data = {}
-      for (const file of files) {
-        const filePath = path +  file
-        const stats = await fs.stat(filePath)
-        if (stats.isDirectory()) {
-          // console.log("directory", filePath)
-          data[file] = await this._lsStorage( filePath + "/")
-        } else {
-          // console.log("file", filePath)
-          if (file == "data.json"){
-            let content = JSON.parse(await fs.readFile(filePath, 'utf8'))
-            if (
-              content.values != undefined &&
-              content.values.name != undefined
-            ){
-              data['name'] = content.values.name
-            }
-            
+    // console.log("ls storage", path)
+    const files = await fs.readdir(path);
+    const data = {};
+    for (const file of files) {
+      const filePath = path + file;
+      const stats = await fs.stat(filePath);
+      // console.log("stats", stats);
+
+      if (stats.isDirectory()) {
+        // console.log("directory", filePath)
+        data[file] = await this._lsStorage(filePath + "/");
+      } else {
+        // console.log("file", filePath)
+        if (file == "data.json") {
+          let content = JSON.parse(await fs.readFile(filePath, "utf8"));
+          if (content.values != undefined && content.values.name != undefined) {
+            data["name"] = content.values.name;
           }
-            let content = await fs.readFile(filePath, 'utf8')
-
-            data[file] = this._try_JSON(content)
         }
+        let content = await fs.readFile(filePath, "utf8");
+
+        data[file] = this._try_JSON(content);
       }
-
-      return data;
-    
-  }
-
- async formatResultObject(result){
-   let formated = []
-    for await(const entry of Object.entries(result)) {
-      if(entry[0] != entry[1]['data.json'].id){
-        console.log(entry[0], entry[1].id, "are not the same ->Problem")
-      }
-
-let line = entry[1]['data.json'].values
-line.id = entry[0]
-// console.log(entry[1]['data.json'].values)
-// line[entry[1].name] = entry[1]['data.json'].values.type+' / '+entry[1]['data.json'].values.description
-formated.push(line)
-
-
+      data[file].mtime = stats.mtime;
     }
-return formated
+
+    // console.log(data);
+    return data;
   }
-  _try_JSON(data){
+
+  async formatResultObject(result) {
+    let formated = [];
+    for await (const entry of Object.entries(result)) {
+      if (entry[0] != entry[1]["data.json"].id) {
+        console.log(entry[0], entry[1].id, "are not the same ->Problem");
+      }
+
+      let line = entry[1]["data.json"].values;
+      line.mtime =entry[1]["data.json"].mtime;
+      line.id = entry[0];
+      // console.log(entry[1]['data.json'].values)
+      // line[entry[1].name] = entry[1]['data.json'].values.type+' / '+entry[1]['data.json'].values.description
+      formated.push(line);
+    }
+    formated = formated.sort((a, b) => {
+      return b.mtime - a.mtime;
+    });
+    return formated;
+  }
+  _try_JSON(data) {
     try {
-      return JSON.parse(data)
+      return JSON.parse(data);
     } catch (error) {
-      return data
+      return data;
     }
   }
 
   async _updateStorage(thing) {
     if (thing.id == undefined) thing.id = uuidv4();
-    console.log("storage", this.storage);
+    // console.log("storage", this.storage);
     const path = this.localPath + thing.id;
     await fs.mkdir(path, { recursive: true });
-    console.log("path", path);
+    console.log("# updating", path);
     await fs.writeFile(path + "/data.json", JSON.stringify(thing));
 
     return "updated", thing.id;
@@ -190,22 +191,17 @@ return formated
             const config = await response.json();
             Object.assign(this, config);
           } else if (options.config_url.endsWith(".js")) {
-            console.log("import", options.config_url)
+            console.log("import", options.config_url);
             //   await import(options.config_url).then((SomeModule) => {
             //     var module = new SomeModule();
             //     // ...
             //     console.log("module", module);
             //     Object.assign(this, module);
             // })
-
           }
-
         } catch (error) {
           console.error("Error loading remote config:", error);
         }
-
-
-
       }
     }
     console.log("init ", this.uuid);

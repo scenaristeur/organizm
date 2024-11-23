@@ -195,6 +195,7 @@ async function loop_root(opts) {
         // console.log(opts.commander.core.bases.levelgraphJsonld)
         break;
       case "new":
+        clear_screen();
         console.log("new");
         let type = await typePrompt();
         if (type == "back") {
@@ -210,9 +211,11 @@ async function loop_root(opts) {
           editionPrompt.fields.push({ name: "type", initial: type });
           //console.log("editionPrompt", editionPrompt);
           let neurone = await editionPrompt.run();
-          //console.log("Neurone", neurone);
-          let result = await opts.commander.parent._update(neurone);
-          console.log("result", result);
+          // console.log("Neurone", neurone);
+          let id = await opts.commander.parent._update(neurone);
+          console.log(
+            "#`" + neurone.values.name + "`" + " added with id " + id
+          );
           //await opts.commander.core.bases.communitySolidServer.create(neurone.values)
           //loop_root(opts)
         }
@@ -221,12 +224,9 @@ async function loop_root(opts) {
         console.log("ls");
         let result = await opts.commander.parent._ls();
         // console.log("result", result);
-let formated = await opts.commander.parent.formatResultObject(result)
-console.table( formated)
-
-
-
-
+        let formated = await opts.commander.parent.formatResultObject(result);
+        clear_screen();
+        console.table(formated);
 
         //      await opts.commander.core.bases.communitySolidServer.onCommand({command:'ls'})
         break;
@@ -260,6 +260,10 @@ console.table( formated)
         console.log("unknown answer", answer);
     }
   }
+}
+
+function clear_screen() {
+  process.stdout.write("\u001b[2J\u001b[0;0H");
 }
 
 export default async function start(opts) {
