@@ -12,6 +12,7 @@ import {Commander, commanderOptions } from '../modules/commander.js'
 import {Example, exampleOptions} from '../modules/example.js'
 import {Dashboard, dashboardOptions} from '../modules/dashboard/index.js'
 import { InputParser, inputParserOptions } from '../modules/inputParser/inputParser.js';
+import  {TraiteTriplet, traiteTripletOptions} from '../modules/traiteTriplet/traiteTriplet.js'
 // import {RpcWebsocket, rpcWebsocketOptions} from '../modules/rpc-websocket.js'
 // import {loop_living_commander} from '../tools/loop_living_commander.js'
 
@@ -45,6 +46,7 @@ organizm.registerModule(Example, exampleOptions)
 organizm.registerModule(Commander, commanderOptions)
 organizm.registerModule(Dashboard, dashboardOptions)
 organizm.registerModule(InputParser, inputParserOptions)
+organizm.registerModule(TraiteTriplet, traiteTripletOptions)
 
 organizm.modules.Example.test_function("test")
 organizm.modules.Example.test_function2("test")

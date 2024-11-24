@@ -2,12 +2,11 @@
 // https://github.com/scenaristeur/agent/blob/main/src/neurone-factory/command.js
 // https://github.com/scenaristeur/agent/blob/db71559451632aca27abbdcf876c175905d49b2b/src/store/modules/core.js#L131
 
-import { InputHistory } from './index.js'
-
+import { InputHistory } from "./index.js";
 
 export class InputParser {
   constructor() {
-    this.type = "InputParser"
+    this.type = "InputParser";
     this.history = new InputHistory();
     this.input = {};
   }
@@ -34,22 +33,22 @@ export class InputParser {
 
     this.checkFirstChar(this.input);
     this.input.end = Date.now();
-this.input.delay = this.input.end - this.input.start;
+    this.input.delay = this.input.end - this.input.start;
     // console.log(this.input);
-    this.history.add(this.input)
+    this.history.add(this.input);
     return this.input;
   }
 
   checkFirstChar(input) {
     let content = input.content;
     let firstChar = content.charAt(0);
-    let arrayContent = []
+    let arrayContent = [];
     switch (firstChar) {
       case "/":
-        arrayContent = content.split(" ").map((e) => e.trim())
+        arrayContent = content.split(" ").map((e) => e.trim());
         this.input.type = "command";
         this.input.command = arrayContent.shift().slice(1);
-        this.input.value = arrayContent
+        this.input.value = arrayContent;
         this.input.inputNew = "";
         break;
       case ".":
@@ -65,34 +64,35 @@ this.input.delay = this.input.end - this.input.start;
         );
         break;
       case "!":
-        console.log("remove triple")
-        let value = content.slice(1)
-        let words = value.split(' ').map((e) => e.trim())
+        console.log("remove triple");
+        let value = content.slice(1);
+        let words = value.split(" ").map((e) => e.trim());
         this.input.type = "command";
         this.input.command = "delete";
-        this.input.value = ["s:"+words[0]+", p:"+words[1]+", o:"+words[2]]
+        this.input.value = [
+          "s:" + words[0] + ", p:" + words[1] + ", o:" + words[2],
+        ];
         this.input.inputNew = "";
         // arrayContent = content.split(" ").map((e) => e.trim())
-        //let value = content 
+        //let value = content
         // [ 's:dav', 'p:a', 'o:boss' ]
-//        let value = []
+        //        let value = []
         // s:"+arrayContent[0]+", p:"+arrayContent[1]+", o:"+arrayContent[2]]
         // this.input.type = "command";
         // this.input.command = "delete";
         // this.input.subcommand = "delete"
         // this.input.value = value
         // this.input.inputNew = "";
-      break;
+        break;
       case "%":
-        console.log("replace /update")
-        arrayContent = content.split(" ").map((e) => e.trim())
-
+        console.log("replace /update");
+        arrayContent = content.split(" ").map((e) => e.trim());
 
         this.input.type = "command";
         this.input.command = "update";
-        this.input.value = arrayContent
+        this.input.value = arrayContent;
         this.input.inputNew = "";
-      break;
+        break;
       case "?":
         //   case "help":
         //   case "h":
@@ -212,14 +212,14 @@ this.input.delay = this.input.end - this.input.start;
   }
 }
 
-export let  inputParserOptions = {
-  "name": "Name of the InputParser Module",
-  "params": {
-    "un": "1",
-    "deux": "2",
-    "trois": "3"
+export let inputParserOptions = {
+  name: "Name of the InputParser Module",
+  params: {
+    un: "1",
+    deux: "2",
+    trois: "3",
   },
-  "resources": {
-    "content": "du contenu"
-  }
-}
+  resources: {
+    content: "du contenu",
+  },
+};

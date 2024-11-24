@@ -73,7 +73,9 @@ const promptcmd = () =>
 
 const promptfree = () =>
   new Input({
-    header: yosay(`- cmd/free to change mode \n- exit to exit`),
+    header: yosay(
+      `- cmd/free to change mode \n- exit to exit \n - three words with a comma to add triple `
+    ),
     message: "=>",
     hint: 'use cmd to switch to cmd mode "',
     // choices: ['new',  'ls', 'find', 'test', 'touch instead of new ?', 'browser','editor','free (mode)', 'neurone (mode)', 'brain (mode)', 'world (mode)', '? help', 'exit' ]
@@ -166,125 +168,128 @@ async function loop_root(opts) {
     answer = answer.trim();
     console.log("answer", answer);
 
+    if (answer.startsWith("vi ")) {
+      let result = await opts.commander.parent.vi(answer.split(" ")[1]);
+      console.log("result", result);
+    } else if (answer.startsWith("jq ")) {
+      let jq_split = answer.split(" ");
+      let query = {};
+      query.filter = jq_split[1];
+      query.data = jq_split[2];
 
-if(answer.startsWith("vi ") ){
-  let result = await opts.commander.parent.vi(answer.split(" ")[1]);
-console.log("result", result)
-}
-else if (answer.startsWith("jq ")) {
-let jq_split = answer.split(" ") 
-let query = {}
-query.filter = jq_split[1]
-query.data = jq_split[2]
-
-  let res = await opts.commander.parent.jq(query);
-  console.log("result", res)
-}
-
-else{
-
-    switch (answer) {
-      case "cmd":
-        mode = "cmd";
-        //loop_root(opts)
-        break;
-      case "free":
-        mode = "free";
-        //loop_root(opts)
-        break;
-      case "memory":
-        opts.commander.parent.switchStorage("memory");
-        break;
-      case "storage":
-        opts.commander.parent.switchStorage("storage");
-        break;
-      case "dashboard":
-        console.log("dashboard");
-        opts.commander.parent.modules.Dashboard.start();
-        break;
-      case "cd":
-        console.log("cd");
-        break;
-      case "test":
-        console.log("test");
-        // await opts.commander.core.bases.levelgraphJsonld.test()
-
-        console.log("test");
-        // await opts.commander.core.bases.communitySolidServer.test()
-        //loop_root(opts);
-        // console.log(opts.commander.core.bases.levelgraphJsonld)
-        break;
-      case "new":
-        clear_screen();
-        console.log("new");
-        let type = await typePrompt();
-        if (type == "back") {
-          console.log("back");
+      let res = await opts.commander.parent.jq(query);
+      console.log("result", res);
+    } else {
+      switch (answer) {
+        case "cmd":
+          mode = "cmd";
           //loop_root(opts)
-        } else {
-          console.log("type", type);
-          let editionPrompt = new Snippet(editionPromptConfig);
-          // remove the type de  editionPrompt.fields
-          editionPromptConfig.fields = editionPromptConfig.fields.filter(
-            (f) => f.name != "type"
-          );
-          editionPrompt.fields.push({ name: "type", initial: type });
-          //console.log("editionPrompt", editionPrompt);
-          let neurone = await editionPrompt.run();
-          // console.log("Neurone", neurone);
-          let id = await opts.commander.parent._update(neurone);
-          console.log(
-            "#`" + neurone.values.name + "`" + " added with id " + id
-          );
-          //await opts.commander.core.bases.communitySolidServer.create(neurone.values)
+          break;
+        case "free":
+          mode = "free";
           //loop_root(opts)
-        }
-        break;
-      case "ls":
-        console.log("ls");
-        let result = await opts.commander.parent._ls();
-        // console.log("result", result);
-        let formated = await opts.commander.parent.formatResultObject(result);
-        clear_screen();
-        console.table(formated);
+          break;
+        case "memory":
+          opts.commander.parent.switchStorage("memory");
+          break;
+        case "storage":
+          opts.commander.parent.switchStorage("storage");
+          break;
+        case "dashboard":
+          console.log("dashboard");
+          opts.commander.parent.modules.Dashboard.start();
+          break;
+        case "cd":
+          console.log("cd");
+          break;
+        case "test":
+          console.log("test");
+          // await opts.commander.core.bases.levelgraphJsonld.test()
 
-        //      await opts.commander.core.bases.communitySolidServer.onCommand({command:'ls'})
-        break;
+          console.log("test");
+          // await opts.commander.core.bases.communitySolidServer.test()
+          //loop_root(opts);
+          // console.log(opts.commander.core.bases.levelgraphJsonld)
+          break;
+        case "new":
+          clear_screen();
+          console.log("new");
+          let type = await typePrompt();
+          if (type == "back") {
+            console.log("back");
+            //loop_root(opts)
+          } else {
+            console.log("type", type);
+            let editionPrompt = new Snippet(editionPromptConfig);
+            // remove the type de  editionPrompt.fields
+            editionPromptConfig.fields = editionPromptConfig.fields.filter(
+              (f) => f.name != "type"
+            );
+            editionPrompt.fields.push({ name: "type", initial: type });
+            //console.log("editionPrompt", editionPrompt);
+            let neurone = await editionPrompt.run();
+            // console.log("Neurone", neurone);
+            let id = await opts.commander.parent._update(neurone);
+            console.log(
+              "#`" + neurone.values.name + "`" + " added with id " + id
+            );
+            //await opts.commander.core.bases.communitySolidServer.create(neurone.values)
+            //loop_root(opts)
+          }
+          break;
+        case "ls":
+          console.log("ls");
+          let result = await opts.commander.parent._ls();
+          // console.log("result", result);
+          let formated = await opts.commander.parent.formatResultObject(result);
+          clear_screen();
+          console.table(formated);
 
-      case "find":
-        console.log("find");
-        let what = await whatPrompt.run();
-        console.log(what);
-        // await opts.commander.core.bases.communitySolidServer.find({what: what})
-        break;
-      case "editor":
-        console.log("editor");
-        // await open('https://sindresorhus.com');
-        // Open an app
-        // console.log(JSON.stringify(openEditor, null, 2))
+          //      await opts.commander.core.bases.communitySolidServer.onCommand({command:'ls'})
+          break;
 
-        // await open.openApp('atom',{arguments: ['README.md:8:5']});
-        await open.openApp("code", { arguments: ["README.md:8:5"] });
-        // openEditor([
-        //   {
-        //     file: 'readme.md',
-        //     line: 10,
-        //     column: 2,
-        //   }
-        // ]);
-        break;
-      case "browser":
-        console.log("browser");
-        await open("https://scenaristeur.github.io/ipgs");
-        break;
-      default:
-        // console.log("unknown answer", answer);
-        let inputObject = {content: answer, role: "user"}
-        // console.log(opts.commander.parent.modules.InputParser)
-        let inputNew = await opts.commander.parent.modules.InputParser.analyze(inputObject);
-console.log("inputObject", inputObject)
+        case "find":
+          console.log("find");
+          let what = await whatPrompt.run();
+          console.log(what);
+          // await opts.commander.core.bases.communitySolidServer.find({what: what})
+          break;
+        case "editor":
+          console.log("editor");
+          // await open('https://sindresorhus.com');
+          // Open an app
+          // console.log(JSON.stringify(openEditor, null, 2))
+
+          // await open.openApp('atom',{arguments: ['README.md:8:5']});
+          await open.openApp("code", { arguments: ["README.md:8:5"] });
+          // openEditor([
+          //   {
+          //     file: 'readme.md',
+          //     line: 10,
+          //     column: 2,
+          //   }
+          // ]);
+          break;
+        case "browser":
+          console.log("browser");
+          await open("https://scenaristeur.github.io/ipgs");
+          break;
+        default:
+          // console.log("unknown answer", answer);
+          let inputObject = { content: answer, role: "user" };
+          // console.log(opts.commander.parent.modules.InputParser)
+          inputObject = await opts.commander.parent.modules.InputParser.analyze(
+            inputObject
+          );
+          console.log("inputObject", inputObject);
+          if (inputObject.type == "triplet") {
+            let result = await opts.commander.parent._traiteTriplet(
+              inputObject
+            );
+            console.log("result", result);
+          }
+      }
     }
-  }
   }
 }
 

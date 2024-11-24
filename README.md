@@ -84,6 +84,31 @@ By default ./classes/Organ.js store data using fs filesystem in `this.localPath 
 It can be switched from storage (persistant) to memory with the available options `memory` and `storage` in availables commands accessed with 'cmd' (see above)
 
 
+# data manipulation
+
+## adding data
+- (EN) To add a triple, type three words followed by a comma (,)
+- (FR) pour ajouter un triplet tapez trois mots suivis d'une virgule (,)
+
+- (EN) To add a property, type three words followed by a comma (,) BUT the second must start with a dot (.)
+- (FR) pour ajouter une propriété tapez trois mots suivis d'une virgule (,) MAIS le second doit commencer par un point (.)
+- (EN) To add a value with more than one word, encapsulate it with double quotes (")
+- (FR) pour ajouter une valeur avec plus d'un mot, encapsulez-le entre guillemets doubles (")
+
+
+example 
+```
+dav a person,
+dav .name david,
+dav .description "a good person",
+dav knows bob,
+```
+
+
+
+
+
+
 # editing organs
 use js https://jqlang.github.io/jq/manual/#basic-filters
 - https://thoughtbot.com/blog/jq-is-sed-for-json

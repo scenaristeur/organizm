@@ -305,6 +305,13 @@ await jq.run(filter, jsonPath, options)
     //return ;
   }
 
+  async _traiteTriplet(input) {
+    console.log("triple", input);
+    let result = await this.modules.TraiteTriplet.process(input);
+    console.log("result", result);
+    return result
+  }
+
   /**
    * Register a new type of module. This module can then be loaded via
    * Agent.extend() and Agent.loadModule().
