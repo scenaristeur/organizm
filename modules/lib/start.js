@@ -54,11 +54,13 @@ const promptcmd = () =>
     choices: [
       "new",
       "ls",
-      "dashboard",
+      "jq [filter] [data]",
+      "vi [number]",
       "cd [path]",
       "free",
       "memory",
       "storage",
+      "dashboard",
       "find",
       "test",
       "browser",
@@ -168,7 +170,18 @@ async function loop_root(opts) {
 if(answer.startsWith("vi ") ){
   let result = await opts.commander.parent.vi(answer.split(" ")[1]);
 console.log("result", result)
-}else{
+}
+else if (answer.startsWith("jq ")) {
+let jq_split = answer.split(" ") 
+let query = {}
+query.filter = jq_split[1]
+query.data = jq_split[2]
+
+  let res = await opts.commander.parent.jq(query);
+  console.log("result", res)
+}
+
+else{
 
     switch (answer) {
       case "cmd":
@@ -237,6 +250,7 @@ console.log("result", result)
 
         //      await opts.commander.core.bases.communitySolidServer.onCommand({command:'ls'})
         break;
+
       case "find":
         console.log("find");
         let what = await whatPrompt.run();
@@ -264,7 +278,11 @@ console.log("result", result)
         await open("https://scenaristeur.github.io/ipgs");
         break;
       default:
-        console.log("unknown answer", answer);
+        // console.log("unknown answer", answer);
+        let inputObject = {content: answer, role: "user"}
+        // console.log(opts.commander.parent.modules.InputParser)
+        let inputNew = await opts.commander.parent.modules.InputParser.analyze(inputObject);
+console.log("inputObject", inputObject)
     }
   }
   }

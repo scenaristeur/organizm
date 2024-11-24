@@ -84,7 +84,11 @@ By default ./classes/Organ.js store data using fs filesystem in `this.localPath 
 It can be switched from storage (persistant) to memory with the available options `memory` and `storage` in availables commands accessed with 'cmd' (see above)
 
 
-
+# editing organs
+use js https://jqlang.github.io/jq/manual/#basic-filters
+- https://thoughtbot.com/blog/jq-is-sed-for-json
+- http://programminghistorian.org/en/lessons/json-and-jq
+- https://jqplay.org/
 
 
 

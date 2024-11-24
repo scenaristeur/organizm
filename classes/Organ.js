@@ -2,6 +2,10 @@ import { v4 as uuidv4 } from "uuid";
 import modele from "./templates/organ_template.js";
 import fs from "fs/promises";
 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const jq = require('node-jq')
+
 const defaut = {
   "@type": "Organ",
   _boxes: { _inbox: { _paths: [] }, _outbox: { _paths: [] } },
@@ -35,6 +39,8 @@ export class Organ {
       ls: this._lsStorage.bind(this),
       update: this._updateStorage.bind(this),
     };
+
+
 
     // this._notifications = {
     //   _listeners: [],
@@ -156,7 +162,44 @@ console.log("selected", this.selected)
 console.log("organ", this.organs[this.selected.id])
 }
 
+async jq(query) {
+  console.log("jq", query)
+  // return await jq(query, this.formated)
+const filter = query.filter || '.'
+if (this.selected == undefined){
+console.log("no selected, use 'ls' and 'vi xx' to select an organ")
+return
+}else{
+const jsonPath = [this.localPath,this.selected.id,'data.json'].join('/')
+console.log(filter, jsonPath)
+const options = {}
 
+await jq.run(filter, jsonPath, options)
+  .then((output) => {
+    console.log("jq",output)
+    /*
+      {
+        "name": "heartgold-soulsilver",
+        "power": "10"
+      },
+      {
+        "name": "platinum",
+        "power": "50"
+      },
+      {
+        "name": "diamond-pearl",
+        "power": "99"
+      }
+    */
+   return output
+  })
+  .catch((err) => {
+    console.error(err)
+    return err
+    // Something went wrong...
+  })
+}
+}
 
   async _updateStorage(thing) {
     if (thing.id == undefined) thing.id = uuidv4();
