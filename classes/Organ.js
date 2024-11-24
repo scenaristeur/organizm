@@ -111,8 +111,8 @@ export class Organ {
         // console.log("file", filePath)
         if (file == "data.json") {
           let content = JSON.parse(await fs.readFile(filePath, "utf8"));
-          if (content.values != undefined && content.values.name != undefined) {
-            data["name"] = content.values.name;
+          if (content != undefined && content.name != undefined) {
+            data["name"] = content.name;
           }
         }
         let content = await fs.readFile(filePath, "utf8");
@@ -133,12 +133,12 @@ export class Organ {
       if (entry[0] != entry[1]["data.json"].id) {
         console.log(entry[0], entry[1].id, "are not the same ->Problem");
       }
-
-      let line = entry[1]["data.json"].values;
+console.log(entry[1]["data.json"])
+      let line = entry[1]["data.json"];
       line.mtime =entry[1]["data.json"].mtime;
       line.id = entry[0];
-      // console.log(entry[1]['data.json'].values)
-      // line[entry[1].name] = entry[1]['data.json'].values.type+' / '+entry[1]['data.json'].values.description
+      // console.log(entry[1]['data.json'])
+      // line[entry[1].name] = entry[1]['data.json'].type+' / '+entry[1]['data.json'].description
       formated.push(line);
     }
     formated = formated.sort((a, b) => {
