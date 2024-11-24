@@ -27,7 +27,7 @@ export class TraiteTriplet {
     if (subjectExists == undefined) {
        subject ={
         name: inputObject.value.subject,
-        type: "node",
+        type: ["node"],
       };
       subjectId = await this.parent._updateStorage(subject);
     } else {
@@ -45,7 +45,7 @@ export class TraiteTriplet {
         let object =  {}
         object={
           name: inputObject.value.object,
-          type: "node",
+          type: ["node"],
           reverse: [
             {
               predicate: inputObject.value.predicate,
