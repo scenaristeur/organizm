@@ -32,7 +32,7 @@ export class TraiteTriplet {
       subjectId = await this.parent._updateStorage(subject);
     } else {
       subjectId = subjectExists["data.json"].id;
-      subject= subjectExists
+      subject= subjectExists["data.json"];
     }
 
     if (typeOfObject == "node") {
@@ -58,27 +58,48 @@ export class TraiteTriplet {
         console.log("created object objectId", objectId);
       } else {
         objectId = objectExists["data.json"].id;
+        let object = objectExists["data.json"];
+        object.reverse.push({
+          predicate: inputObject.value.predicate,
+          subject: subjectId,
+        })
+        objectId = await this.parent._updateStorage(object);
       }
 
 
       console.log("doit ajoute", subjectId, inputObject.value.predicate, objectId);
+      if(subject[inputObject.value.predicate] == undefined){
+        subject[inputObject.value.predicate] = []
+      }
+      subject[inputObject.value.predicate].push({id:objectId});
+      console.log("subject", subject)
+      let updated = await this.parent._updateStorage(subject);
+      console.log("updated in traiteTriplet", updated);
+      return updated
 
     } else {
       console.log("doit ajoute la propriété à ", subjectId);
       if (typeOfObject == "node"){
-        subject[inputObject.value.predicate] = objectId;
+        if(subject[inputObject.value.predicate] == undefined){
+          subject[inputObject.value.predicate] = []
+        }
+
+        subject[inputObject.value.predicate].push(objectId)
       }else{
         let prop = inputObject.value.predicate.substring(1)
-        subject[prop] = inputObject.value.object;
+        if(subject[prop] == undefined){
+          subject[prop] = []
+        }
+        subject[prop].push( inputObject.value.object);
       }
       console.log("subject", subject)
       let updated = await this.parent._updateStorage(subject);
       console.log("updated in traiteTriplet", updated);
-      
+      return updated
 
     }
 
-    return "okdav  ad";
+    // return "okdav  ad";
   }
   // test_function(data){
   //   console.log("test function ", data)

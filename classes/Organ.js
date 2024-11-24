@@ -223,6 +223,7 @@ await jq.run(filter, jsonPath, options)
       this._update = this.storage.update;
     }
   }
+  
 
   async init(options) {
     if (options["@id"]) {
