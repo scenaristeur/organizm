@@ -117,6 +117,7 @@ export class Organ {
     }
 
     // console.log(data);
+    this.organs = data
     return data;
   }
 
@@ -137,6 +138,7 @@ export class Organ {
     formated = formated.sort((a, b) => {
       return b.mtime - a.mtime;
     });
+    this.formated = formated
     return formated;
   }
   _try_JSON(data) {
@@ -146,6 +148,15 @@ export class Organ {
       return data;
     }
   }
+
+async vi(number) {
+  console.log("vi", number)
+this.selected = this.formated[number]
+console.log("selected", this.selected)
+console.log("organ", this.organs[this.selected.id])
+}
+
+
 
   async _updateStorage(thing) {
     if (thing.id == undefined) thing.id = uuidv4();

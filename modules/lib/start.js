@@ -163,6 +163,13 @@ async function loop_root(opts) {
     answer = await prompt;
     answer = answer.trim();
     console.log("answer", answer);
+
+
+if(answer.startsWith("vi ") ){
+  let result = await opts.commander.parent.vi(answer.split(" ")[1]);
+console.log("result", result)
+}else{
+
     switch (answer) {
       case "cmd":
         mode = "cmd";
@@ -259,6 +266,7 @@ async function loop_root(opts) {
       default:
         console.log("unknown answer", answer);
     }
+  }
   }
 }
 
