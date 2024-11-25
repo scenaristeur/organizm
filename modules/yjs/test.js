@@ -85,6 +85,19 @@ ymap.observe(ymapEvent => {
   })
 })
 
+// https://docs.yjs.dev/getting-started/working-with-shared-types
+const messages = ydoc.getArray('messages')
+
+messages.observe(event => {
+  // Log a delta every time the type changes
+  // Learn more about the delta format here: https://quilljs.com/docs/delta/
+  console.log('delta:', event.changes.delta)
+  let conversation = messages.toArray()
+  console.log("conversation", conversation)
+})
+
+
+
 const make_update = function () {
   console.log("update")
   // Method 1: Define a top-level type
@@ -101,6 +114,8 @@ const make_update = function () {
   ymap.set('date', Date.now()) // value can be anything json-encodable
   ymap.get('prop-name') // => 'value'
   ymap.delete('prop-name')
+
+  messages.insert(0,[{'role': 'orz', 'name': characterName, /*'senderId',*/ 'content' : 'il est '+new Date().toLocaleTimeString()+' et tout va bien...'}])
 }
 
 var t = setInterval(make_update, 5000);
