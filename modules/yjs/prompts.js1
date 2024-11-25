@@ -1,0 +1,62 @@
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+// import { v4 as uuidv4 } from "uuid";
+const { Input, Confirm, Snippet, autocomplete } = require("enquirer");
+import yosay from "yosay";
+
+const promptfree = () =>
+  new Input({
+    header: yosay(
+      `- YJS server `
+    ),
+    message: "=>",
+    hint: 'server "',
+    // choices: ['new',  'ls', 'find', 'test', 'touch instead of new ?', 'browser','editor','free (mode)', 'neurone (mode)', 'brain (mode)', 'world (mode)', '? help', 'exit' ]
+    //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'exit']
+  });
+
+export class Prompts {
+  constructor(options, parent) {  
+    // this.parent = parent
+    // this.type = "Example" // use this to call organizm.modules.Example.test_function("test")
+    // this.name = options.name;
+    // this.params = options.params
+    // this.resources = options.resources
+    this.server = promptfree
+
+  }
+  // test_function(data){
+  //   console.log("test function ", data)
+  // }
+  // test_function2(data){
+  //   console.log("test function 2", data + this.resources.content)
+  // }
+  // test_parent_id(){
+  //   console.log("!!!!! module access his parent id of a registered module", this.parent.id)
+  // }
+
+//   async server (){
+//    let answer = new Input({
+//       header: "Yjs server",
+//       message: "=>",
+//       initial: "http://localhost:1234"
+//       // hint: "http://localhost:1234, default, remote",
+//       // choices: ["http://localhost:1234", "remote"],
+//       //choices: ['test', 'neurone', 'brain', 'world', 'other', 'create', 'read', 'update', 'delete', 'exit']
+//     });
+//     return answer
+  
+// }
+
+// export let  exampleOptions = {
+//   "name": "Name of the Example Module",
+//   "params": {
+//     "un": "1",
+//     "deux": "2",
+//     "trois": "3"
+//   },
+//   "resources": {
+//     "content": "du contenu"
+//   }
+}

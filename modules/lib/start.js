@@ -65,6 +65,7 @@ const promptcmd = () =>
       "test",
       "browser",
       "editor",
+      "make_update (yjs test)",
       /* 'neurone (mode)', 'brain (mode)', 'world (mode)',*/ "? help",
       "exit",
     ],
@@ -273,6 +274,15 @@ async function loop_root(opts) {
         case "browser":
           console.log("browser");
           await open("https://scenaristeur.github.io/ipgs");
+          break;
+case "yjs":
+// console.log(opts.commander.parent.modules.YjsClient.Prompts)
+let server = await opts.commander.parent.modules.YjsClient.init();
+console.log("YJS server",server)
+break;
+        case "make_update":
+          let res = await opts.commander.parent.modules.YjsClient.make_update()
+          console.log(res)
           break;
         default:
           // console.log("unknown answer", answer);

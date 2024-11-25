@@ -4,7 +4,7 @@ import fs from "fs/promises";
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
-// const jq = require('node-jq')
+const jq = require('node-jq')
 
 const defaut = {
   "@type": "Organ",
