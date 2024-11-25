@@ -35,9 +35,6 @@ export class RpcWebsocket {
       this.log("is not server")
     }
     this.start_client()
-
-
-
   }
   start_server() {
     this.log("I SAY isServer", this.isServer)

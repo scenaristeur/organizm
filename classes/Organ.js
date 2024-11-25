@@ -2,6 +2,10 @@ import { v4 as uuidv4 } from "uuid";
 import modele from "./templates/organ_template.js";
 import fs from "fs/promises";
 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const jq = require('node-jq')
+
 const defaut = {
   "@type": "Organ",
   _boxes: { _inbox: { _paths: [] }, _outbox: { _paths: [] } },
@@ -35,6 +39,8 @@ export class Organ {
       ls: this._lsStorage.bind(this),
       update: this._updateStorage.bind(this),
     };
+
+
 
     // this._notifications = {
     //   _listeners: [],
@@ -89,33 +95,118 @@ export class Organ {
     }
   }
 
-  async _lsStorage(thing = null) {
-    let path = this.localPath;
-    if (thing != null) {
-      console.log("should filter storage with ", thing);
-    } else {
-      const files = await fs.readdir(path);
-      const data = {}
-      for (const file of files) {
-        const filePath = path + "/" + file
-        const stats = await fs.stat(filePath)
-        if (stats.isDirectory()) {
-          data[file] = await this._lsStorage({ path: filePath })
-        } else {
-          data[file] = await fs.readFile(filePath, 'utf8')
-        }
-      }
+  async _lsStorage(path = this.localPath) {
+    // console.log("ls storage", path)
+    const files = await fs.readdir(path);
+    const data = {};
+    for (const file of files) {
+      const filePath = path + file;
+      const stats = await fs.stat(filePath);
+      // console.log("stats", stats);
 
+      if (stats.isDirectory()) {
+        // console.log("directory", filePath)
+        data[file] = await this._lsStorage(filePath + "/");
+      } else {
+        // console.log("file", filePath)
+        if (file == "data.json") {
+          let content = JSON.parse(await fs.readFile(filePath, "utf8"));
+          if (content != undefined && content.name != undefined) {
+            data["name"] = content.name;
+          }
+        }
+        let content = await fs.readFile(filePath, "utf8");
+
+        data[file] = this._try_JSON(content);
+      }
+      data[file].mtime = stats.mtime;
+    }
+
+    // console.log(data);
+    this.organs = data
+    return data;
+  }
+
+  async formatResultObject(result) {
+    let formated = [];
+    for await (const entry of Object.entries(result)) {
+      if (entry[0] != entry[1]["data.json"].id) {
+        console.log(entry[0], entry[1].id, "are not the same ->Problem");
+      }
+console.log(entry[1]["data.json"])
+      let line = entry[1]["data.json"];
+      line.mtime =entry[1]["data.json"].mtime;
+      line.id = entry[0];
+      // console.log(entry[1]['data.json'])
+      // line[entry[1].name] = entry[1]['data.json'].type+' / '+entry[1]['data.json'].description
+      formated.push(line);
+    }
+    formated = formated.sort((a, b) => {
+      return b.mtime - a.mtime;
+    });
+    this.formated = formated
+    return formated;
+  }
+  _try_JSON(data) {
+    try {
+      return JSON.parse(data);
+    } catch (error) {
       return data;
     }
   }
 
+async vi(number) {
+  console.log("vi", number)
+this.selected = this.formated[number]
+console.log("selected", this.selected)
+console.log("organ", this.organs[this.selected.id])
+}
+
+async jq(query) {
+  console.log("jq", query)
+  // return await jq(query, this.formated)
+const filter = query.filter || '.'
+if (this.selected == undefined){
+console.log("no selected, use 'ls' and 'vi xx' to select an organ")
+return
+}else{
+const jsonPath = [this.localPath,this.selected.id,'data.json'].join('/')
+console.log(filter, jsonPath)
+const options = {}
+
+await jq.run(filter, jsonPath, options)
+  .then((output) => {
+    console.log("jq",output)
+    /*
+      {
+        "name": "heartgold-soulsilver",
+        "power": "10"
+      },
+      {
+        "name": "platinum",
+        "power": "50"
+      },
+      {
+        "name": "diamond-pearl",
+        "power": "99"
+      }
+    */
+   return output
+  })
+  .catch((err) => {
+    console.error(err)
+    return err
+    // Something went wrong...
+  })
+}
+}
+
   async _updateStorage(thing) {
     if (thing.id == undefined) thing.id = uuidv4();
-    console.log("storage", this.storage);
+    // console.log("storage", this.storage);
     const path = this.localPath + thing.id;
     await fs.mkdir(path, { recursive: true });
-    console.log("path", path);
+    console.log("# updating", path);
     await fs.writeFile(path + "/data.json", JSON.stringify(thing));
 
     return "updated", thing.id;
@@ -132,6 +223,7 @@ export class Organ {
       this._update = this.storage.update;
     }
   }
+  
 
   async init(options) {
     if (options["@id"]) {
@@ -154,22 +246,17 @@ export class Organ {
             const config = await response.json();
             Object.assign(this, config);
           } else if (options.config_url.endsWith(".js")) {
-            console.log("import", options.config_url)
+            console.log("import", options.config_url);
             //   await import(options.config_url).then((SomeModule) => {
             //     var module = new SomeModule();
             //     // ...
             //     console.log("module", module);
             //     Object.assign(this, module);
             // })
-
           }
-
         } catch (error) {
           console.error("Error loading remote config:", error);
         }
-
-
-
       }
     }
     console.log("init ", this.uuid);
@@ -217,6 +304,13 @@ export class Organ {
   async _start(args = {}) {
     console.log(this.id, "start", args);
     //return ;
+  }
+
+  async _traiteTriplet(input) {
+    console.log("triple", input);
+    let result = await this.modules.TraiteTriplet.process(input);
+    console.log("result", result);
+    return result
   }
 
   /**
