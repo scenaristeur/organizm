@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const debug = false
 
+import "dotenv/config";
 
 import minimist from 'minimist';
 
@@ -15,7 +16,8 @@ import { InputParser, inputParserOptions } from '../modules/inputParser/inputPar
 import { TraiteTriplet, traiteTripletOptions } from '../modules/traiteTriplet/traiteTriplet.js'
 // import { YjsClient, yjsClientOptions } from '../modules/yjs/YjsClient.js'
 import {Team, teamOptions} from '../modules/team/Team.js'
-// import { NodeLlamaCpp, nodeLlamaCppOptions } from '../modules/llmProviders/NodeLlamaCpp.js'
+import { LangGraphLlm, langGraphLlmOptions } from '../modules/llmProviders/LangGraph.js'
+
 
 // import {RpcWebsocket, rpcWebsocketOptions} from '../modules/rpc-websocket.js'
 // import {loop_living_commander} from '../tools/loop_living_commander.js'
@@ -54,6 +56,8 @@ organizm.registerModule(TraiteTriplet, traiteTripletOptions)
 organizm.registerModule(Team, teamOptions)
 // organizm.registerModule(NodeLlamaCpp, nodeLlamaCppOptions)
 // organizm.registerModule(YjsClient, yjsClientOptions)
+
+organizm.registerModule(LangGraphLlm, langGraphLlmOptions)
 
 organizm.modules.Example.test_function("test")
 organizm.modules.Example.test_function2("test")

@@ -98,6 +98,8 @@ async function loop_root(opts) {
         switch (action) {
           case "runT":
             console.log("run", team);
+            let result = await opts.team.parent.modules.LangGraphLlm.run(team);
+            console.log("result", result);
             break;
           case "editT":
             console.log("edit", team);
