@@ -29,7 +29,7 @@ export class Organ {
     this.versions = { latest: "0.0.1" };
     this.status = "init";
     this.modules = [];
-    this.localPath = process.env.HOME + "/.organizm/data/";
+    this.localPath = process.env.HOME + "/.organizm";
     this.memory = {
       data: {},
       update: this._updateMemory.bind(this),
@@ -95,7 +95,7 @@ export class Organ {
     }
   }
 
-  async _lsStorage(path = this.localPath) {
+  async _lsStorage(path = this.localPath+"/data/") {
     // console.log("ls storage", path)
     const files = await fs.readdir(path);
     const data = {};
@@ -170,7 +170,7 @@ if (this.selected == undefined){
 console.log("no selected, use 'ls' and 'vi xx' to select an organ")
 return
 }else{
-const jsonPath = [this.localPath,this.selected.id,'data.json'].join('/')
+const jsonPath = [this.localPath,"data",this.selected.id,'data.json'].join('/')
 console.log(filter, jsonPath)
 const options = {}
 
@@ -201,10 +201,10 @@ await jq.run(filter, jsonPath, options)
 }
 }
 
-  async _updateStorage(thing) {
+  async _updateStorage(thing, folder = 'data') {
     if (thing.id == undefined) thing.id = uuidv4();
     // console.log("storage", this.storage);
-    const path = this.localPath + thing.id;
+    const path = [this.localPath,folder,thing.id].join('/')
     await fs.mkdir(path, { recursive: true });
     console.log("# updating", path);
     await fs.writeFile(path + "/data.json", JSON.stringify(thing));

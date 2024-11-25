@@ -33,7 +33,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
+    "dev1": "nodemon index.js --no-stdin",
+    "dev": "node index.js ",
     "debug": "node index.js debug",
     "install-g": "npm install -g ./"
   },

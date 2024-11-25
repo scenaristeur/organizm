@@ -58,7 +58,9 @@ const promptcmd = () =>
       "vi [number]",
       "cd [path]",
       "free",
+      "team",
       "memory",
+      "modules",
       "storage",
       "dashboard",
       "find",
@@ -182,6 +184,12 @@ async function loop_root(opts) {
       console.log("result", res);
     } else {
       switch (answer) {
+        case "modules":
+console.table (opts.commander.parent.modules)
+        break;
+        case "team":
+          opts.commander.parent.modules.Team.start();
+        break;
         case "cmd":
           mode = "cmd";
           //loop_root(opts)
@@ -275,14 +283,14 @@ async function loop_root(opts) {
           console.log("browser");
           await open("https://scenaristeur.github.io/ipgs");
           break;
-case "yjs":
-// console.log(opts.commander.parent.modules.YjsClient.Prompts)
-let server = await opts.commander.parent.modules.YjsClient.init();
-console.log("YJS server",server)
-break;
+        case "yjs":
+          // console.log(opts.commander.parent.modules.YjsClient.Prompts)
+          let server = await opts.commander.parent.modules.YjsClient.init();
+          console.log("YJS server", server);
+          break;
         case "make_update":
-          let res = await opts.commander.parent.modules.YjsClient.make_update()
-          console.log(res)
+          let res = await opts.commander.parent.modules.YjsClient.make_update();
+          console.log(res);
           break;
         default:
           // console.log("unknown answer", answer);

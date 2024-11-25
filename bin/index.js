@@ -13,8 +13,8 @@ import { Example, exampleOptions } from '../modules/example.js'
 import { Dashboard, dashboardOptions } from '../modules/dashboard/index.js'
 import { InputParser, inputParserOptions } from '../modules/inputParser/inputParser.js';
 import { TraiteTriplet, traiteTripletOptions } from '../modules/traiteTriplet/traiteTriplet.js'
-import { YjsClient, yjsClientOptions } from '../modules/yjs/YjsClient.js'
-
+// import { YjsClient, yjsClientOptions } from '../modules/yjs/YjsClient.js'
+import {Team, teamOptions} from '../modules/team/Team.js'
 
 // import {RpcWebsocket, rpcWebsocketOptions} from '../modules/rpc-websocket.js'
 // import {loop_living_commander} from '../tools/loop_living_commander.js'
@@ -50,7 +50,8 @@ organizm.registerModule(Commander, commanderOptions)
 organizm.registerModule(Dashboard, dashboardOptions)
 organizm.registerModule(InputParser, inputParserOptions)
 organizm.registerModule(TraiteTriplet, traiteTripletOptions)
-organizm.registerModule(YjsClient, yjsClientOptions)
+organizm.registerModule(Team, teamOptions)
+// organizm.registerModule(YjsClient, yjsClientOptions)
 
 organizm.modules.Example.test_function("test")
 organizm.modules.Example.test_function2("test")
@@ -79,6 +80,7 @@ if (argv.d == true) {
   organizm.modules.Dashboard.start()
 } else {
   console.error("Run `orz -c` (for cli) or `orz -d` (for dashboard)")
-  organizm.modules.Commander.start()
+  // organizm.modules.Commander.start()
+  organizm.modules.Team.start()
 }
 
