@@ -97,8 +97,10 @@ export class Organ {
 
   async _lsStorage(path = this.localPath+"/data/") {
     // console.log("ls storage", path)
-    const files = await fs.readdir(path);
     const data = {};
+    try{
+    const files = await fs.readdir(path);
+ 
     for (const file of files) {
       const filePath = path + file;
       const stats = await fs.stat(filePath);
@@ -120,6 +122,9 @@ export class Organ {
         data[file] = this._try_JSON(content);
       }
       data[file].mtime = stats.mtime;
+    }
+    }catch(e){
+      //console.log(e)
     }
 
     // console.log(data);

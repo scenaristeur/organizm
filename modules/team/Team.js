@@ -9,19 +9,27 @@ export class Team {
       this.name = options.name;
       this.params = options.params
       this.resources = options.resources
-     this.get_teams()
+    //  this.get_teams()
     }
 
     async get_teams(){
-      let teams = Object.values(await this.parent._lsStorage(this.parent.localPath+'/teams/')).map((team) => team['data.json'])
-      console.log("")
+      let teams = Object.values(await this.parent._lsStorage(this.parent.localPath+'/teams/')).map((team) => team['data.json']).sort((a, b) => b.mtime - a.mtime)
+      console.log("TEAMS")
       console.table(teams)
       this.teams = teams
+    }
+
+    async get_agents(){
+      let agents = Object.values(await this.parent._lsStorage(this.parent.localPath + "/agents/")).map((agent) => agent['data.json']).sort((a, b) => b.mtime - a.mtime)
+      console.log("AGENTS")
+      console.table(agents)
+      this.agents = agents
     }
 
     async start(opts = {}){
         opts.team = this
        await  this.get_teams()
+       await  this.get_agents()
     let config = await prompts(opts)
     console.log("conf",config)
     //console.log("team", this)
