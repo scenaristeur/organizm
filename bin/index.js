@@ -15,6 +15,7 @@ import { InputParser, inputParserOptions } from '../modules/inputParser/inputPar
 import { TraiteTriplet, traiteTripletOptions } from '../modules/traiteTriplet/traiteTriplet.js'
 // import { YjsClient, yjsClientOptions } from '../modules/yjs/YjsClient.js'
 import {Team, teamOptions} from '../modules/team/Team.js'
+// import { NodeLlamaCpp, nodeLlamaCppOptions } from '../modules/llmProviders/NodeLlamaCpp.js'
 
 // import {RpcWebsocket, rpcWebsocketOptions} from '../modules/rpc-websocket.js'
 // import {loop_living_commander} from '../tools/loop_living_commander.js'
@@ -51,6 +52,7 @@ organizm.registerModule(Dashboard, dashboardOptions)
 organizm.registerModule(InputParser, inputParserOptions)
 organizm.registerModule(TraiteTriplet, traiteTripletOptions)
 organizm.registerModule(Team, teamOptions)
+// organizm.registerModule(NodeLlamaCpp, nodeLlamaCppOptions)
 // organizm.registerModule(YjsClient, yjsClientOptions)
 
 organizm.modules.Example.test_function("test")

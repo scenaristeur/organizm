@@ -232,7 +232,11 @@ VITE_SOLID_TOKEN_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxx"
 # Default Data Folder
 - $HOME/.organizm/ 
 
-
+# download a model 
+- see https://node-llama-cpp.withcat.ai/guide/#getting-a-model-file
+```
+npx --no node-llama-cpp pull --dir $HOME/.organizm/models https://huggingface.co/mradermacher/Meta-Llama-3.1-8B-Instruct-GGUF/blob/main/Meta-Llama-3.1-8B-Instruct.Q4_K_M.gguf
+```
 
 # typescript ? interface or type alias ? 
 - https://blog.logrocket.com/types-vs-interfaces-typescript/

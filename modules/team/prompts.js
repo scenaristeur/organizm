@@ -58,6 +58,7 @@ async function loop_root(opts) {
           name: "Framework",
           message: "Select an Agent Framework",
           choices: [
+            { message: "Node Llama Cpp", name: "node-llama-cpp" },
             { message: "CrewAi", name: "crewai" },
             { message: "Autogen", name: "autogen" },
             { message: "LangGraph", name: "langgraph" },
@@ -107,11 +108,7 @@ async function loop_root(opts) {
               name: "Agents",
               message: "Select Agents to add to your team with spacebar",
               //   limit: 7,
-              //   initial () {
-              //     const initial = ['Bob']
-              //     this.options.initial = initial // How I am working around this issue
-              //     return initial
-              //   },
+
               initial: team.agents.map((agent) => {
                 return agent.id;
               }),
