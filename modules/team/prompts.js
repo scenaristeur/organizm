@@ -35,7 +35,8 @@ async function loop_root(opts) {
         { message: "new Team", name: "newT" },
         { message: "edit a Team", name: "editT" },
         { message: "delete a Team", name: "deleteT" },
-
+        { role: "separator" },
+        { message: "Team of teams", name: "ToT" },
         { role: "separator" },
         // { message: "run a Team", name: "run" },
 
@@ -84,6 +85,7 @@ async function loop_root(opts) {
       case "editT":
       case "runT":
       case "deleteT":
+      case "ToT":
         let teams = await opts.team.teams;
         // console.log("teams", teams)
         let promptTeamSelect = new Select({
@@ -93,7 +95,9 @@ async function loop_root(opts) {
         });
         let teamName = await promptTeamSelect.run();
         let team = teams.find((team) => team.name == teamName);
-
+        if (team.agents == undefined) {
+          team.agents = [];
+        }
         // console.log("team", team);
         switch (action) {
           case "runT":
@@ -103,10 +107,8 @@ async function loop_root(opts) {
             break;
           case "editT":
             console.log("edit", team);
-            if (team.agents == undefined) {
-              team.agents = [];
-            }
-            const prompt = new MultiSelect({
+
+            const promptAgentSelect = new MultiSelect({
               name: "Agents",
               message: "Select Agents to add to your team with spacebar",
               //   limit: 7,
@@ -119,7 +121,7 @@ async function loop_root(opts) {
               }),
             });
 
-            let answer = await prompt.run();
+            let answer = await promptAgentSelect.run();
             console.log("Answer:", answer);
             // update team
             team.agents = answer.map((id) => {
@@ -166,6 +168,70 @@ async function loop_root(opts) {
           case "deleteT":
             console.log("ARE YOU SURE ?");
             console.log("delete", team);
+            break;
+          case "ToT":
+            console.log("team of team")
+
+
+            const promptTeamOfTeam = new MultiSelect({
+              name: "Teams",
+              message: "Select Teams to add to your team with spacebar",
+              //   limit: 7,
+
+              initial: team.agents.map((agent) => {
+                return agent.id;
+              }),
+              choices: opts.team.teams.map((team) => {
+                return { message: team.name, name: team.id };
+              }),
+            });
+
+            let answerToT = await promptTeamOfTeam.run();
+            console.log("Answer:", answerToT);
+            // update team
+            team.agents = answer.map((id) => {
+              return { id: id };
+            });
+            console.log("team", team);
+            // let updated = await opts.team.parent._updateStorage(team, "teams");
+            // clear_screen();
+            // console.log("updated", updated);
+            // await opts.team.get_teams();
+
+            // // update agents
+            // opts.team.agents.forEach(async (agent) => {
+            //   console.log("agent", agent, agent.id);
+            //   let shouldUpdate = false;
+            //   if (agent.teams == undefined) {
+            //     agent.teams = [];
+            //   }
+
+            //   let agentHasTeam = agent.teams.find((t) => t.id == team.id);
+
+            //   if (answer.includes(agent.id)) {
+            //     if (agentHasTeam == undefined) {
+            //       agent.teams.push({ id: team.id });
+            //       shouldUpdate = true;
+            //     }
+            //   } else {
+            //     if (agentHasTeam != undefined) {
+            //       agent.teams.splice(agent.teams.indexOf(team.id), 1);
+            //       shouldUpdate = true;
+            //     }
+            //   }
+            //   if (shouldUpdate) {
+            //     let updated = await opts.team.parent._updateStorage(
+            //       agent,
+            //       "agents"
+            //     );
+            //     console.log("updated", updated);
+            //   }
+            // });
+            // clear_screen();
+
+
+
+
             break;
         }
         break;
@@ -220,6 +286,8 @@ async function loop_root(opts) {
         let agents = opts.team.agents;
         // console.table(agents);
         break;
+
+
 
       default:
         console.log(" not implemented, unknown action");
