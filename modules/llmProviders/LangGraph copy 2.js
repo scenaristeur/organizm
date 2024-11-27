@@ -2,9 +2,6 @@
 // https://www.youtube.com/watch?v=hvAPnpSfSGo
 // little team https://github.com/langchain-ai/langgraphjs/blob/main/examples/multi_agent/agent_supervisor.ipynb
 // custom https://langchain-ai.github.io/langgraph/concepts/multi_agent/#multi-agent-architectures
-// https://langchain-ai.github.io/langgraph/concepts/multi_agent/#custom-multi-agent-workflow
-// https://langchain-ai.github.io/langgraph/tutorials/#agent-architectures
-// https://langchain-ai.github.io/langgraph/tutorials/#chatbots
 import "dotenv/config";
 import { TavilySearchResults } from "@langchain/community/tools/tavily_search";
 import { CheerioWebBaseLoader } from "@langchain/community/document_loaders/web/cheerio";
@@ -265,7 +262,7 @@ const agentMessageModifier = (
 
 async function runAgentNode(params) {
   const { state, agent, name } = params;
-  // console.log("runAgentNode", state, agent, name)
+  console.log("runAgentNode", state, agent, name)
   const result = await agent.invoke({
     messages: state.messages,
   });
@@ -295,7 +292,7 @@ async function createTeamSupervisor(
     new MessagesPlaceholder("messages"),
     [
       "user",
-      "Given the conversation above, who should act next? Or should we FINISH? Select one of: {options}",
+      "Given the conversation below, who should act next? Or should we FINISH? Select one of: {options}",
     ],
   ]);
   prompt = await prompt.partial({
@@ -593,13 +590,13 @@ const joinGraph = RunnableLambda.from((response) => {
 
 const superGraph = new StateGraph(State)
   .addNode("ResearchTeam", async (input) => {
-    // console.log("ResearchTeam", input)
+    console.log("ResearchTeam", input)
     const getMessagesResult = await getMessages.invoke(input);
-    // console.log("getMessagesResult", getMessagesResult)
+    console.log("getMessagesResult", getMessagesResult)
     const researchChainResult = await researchChain.invoke({
       messages: getMessagesResult.messages,
     });
-    // console.log("researchChainResult", researchChainResult)
+    console.log("researchChainResult", researchChainResult)
     const joinGraphResult = await joinGraph.invoke({
       messages: researchChainResult.messages,
     });
@@ -629,32 +626,8 @@ export class LangGraphLlm {
     //this.init();
   }
 
-  async run(team){
-    console.log("team", team)
-// console.log( "this.parent", this.parent)
-// console.log(this.parent.organs)
-if (team.agents!= undefined && team.agents.length>0){
-  
 
-let ids = team.agents.map((agent) => agent.id)
-console.log(ids)
-// console.log(this.parent.organs)
-let agents = Object.values(this.parent.organs).filter(org => {
-  let data = org['data.json']
-  console.log(data)
-  
-  if(ids.includes(data.id)){return true}
-
-})
-console.log("agents", agents)
-  }else{
-    console.log("no agents in this team, use 'edit Team' to add them")
-  }
-
-
-  }
-
-async runOk(){
+async run(){
   // Example invocation
 let result = await writeDocumentTool.invoke({
   content: "Hello from LangGraph!",
@@ -785,7 +758,7 @@ function shouldContinue(state) {
 // Define the function that calls the model
 async function callModel(state) {
   const messages = state.messages;
-  // console.log ("messages l761", messages)
+  console.log ("messages l761", messages)
   const response = await model.invoke(messages);
 
   // We return a list, because this will get added to the existing list
