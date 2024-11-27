@@ -11,6 +11,14 @@ import { CheerioWebBaseLoader } from "@langchain/community/document_loaders/web/
 import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+
+const { Input } = require("enquirer");
+
+
+
 const tavilyTool = new TavilySearchResults();
 
 const scrapeWebpage = tool(async (input) => {
@@ -647,9 +655,106 @@ let agents = Object.values(this.parent.organs).filter(org => {
 
 })
 console.log("agents", agents)
+
+let langAgents= agents.map((agent) => {
+  let prompt = agent['data.json'].prompt
+  return {name: agent['data.json'].name, agent: createReactAgent({ llm: llm,  tools: [], messageModifier: prompt })}
+})
+
+// console.log("langAgents", langAgents)
+
+
+
+
+
+const prompt = new Input({
+  message: 'Quelle est ta question ?',
+  // initial: 'jonschlinkert'
+});
+
+let answer = await prompt.run()
+
+
+
+
+let conditions = {
+  // PaperWritingTeam: "PaperWritingTeam",
+  // ResearchTeam: "ResearchTeam",
+  FINISH: END,
+}
+let myGraph = new StateGraph(State)
+
+let members = langAgents.map((agent) => agent.name)
+console.log("members", members)
+
+// let supervisorPrompt =   `You are a supervisor tasked with managing a conversation between the 
+// following teams: {team_members}. Given the following user request,
+// respond with the worker to act next. Each worker will perform a 
+// task and respond with their results and status. When finished,
+// respond with FINISH.
+
+// Select strategically to minimize the number of steps taken.
+// ${members.join(", ")}`
+
+// console.log("supervisorPrompt", supervisorPrompt)
+
+for (let i = 0; i < langAgents.length; i++) {
+  let agent = langAgents[i]
+  let agentName = agent.name
+  console.log("agentName", agentName)
+  myGraph.addNode(agentName, agent.agent)
+conditions[agentName] = agentName
+myGraph.addEdge(agentName, "supervisor")
+}
+
+const supNode = await createTeamSupervisor(
+  llm,
+  "You are a supervisor tasked with managing a conversation between the" +
+    " following workers:  {team_members}. Given the following user request," +
+    " respond with the worker to act next. Each worker will perform a" +
+    " task and respond with their results and status. When finished," +
+    " respond with FINISH.\n\n" +
+    " Select strategically to minimize the number of steps taken.",
+  members,
+);
+
+
+ 
+
+myGraph.addConditionalEdges("supervisor", (x) => x.next, conditions)
+  .addEdge(START, "supervisor")
+  .addNode("supervisor", supNode)
+
+const compiledmyGraph = myGraph.compile();
+  // .then(answer => console.log('Answer:', answer))
+  // .catch(console.log);
+
+
+  let resultStream = compiledmyGraph.stream(
+    {
+      messages: [
+        new HumanMessage(
+          answer,
+        ),
+      ],
+    },
+    { recursionLimit: 10 },
+  );
+  
+  for await (const step of await resultStream) {
+    if (!step.__end__) {
+      console.log(step);
+      console.log("---");
+    }
+  }
+  
+
   }else{
     console.log("no agents in this team, use 'edit Team' to add them")
   }
+
+
+
 
 
   }
